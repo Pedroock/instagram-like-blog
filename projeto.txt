@@ -1,0 +1,99 @@
+O PROJETO É FAZER UM SITE IGUAL O INSTAGRAM, E AQUI EU QUERO FAZER TIPO UM ROADMAP.
+O BASICO VAI SER CRIAR O SISTEMA LOGIN, VAMO DAR UMA OLHADA NAS DOC DO MODEL USER NO DJANGO E VAMOS CRIAR TAMBÉM O SIGNAL DO PROFILE PRA OS DOIS VIR JUNTOS, VAMOS CRIAR O BÁSICO E DPS ADICIONAR ALGO CASO SEJA NECESSARIO.
+VAMOS CRIAR UM SISTEMA DE POSTS, QUE VAI TER A DESCRIÇÃO E UMA FOTO E UM CRIADOR. E VAMOS FAZER AS FORMS PARA CRIAR O POST.
+VAMOS FAZER O ESQUEMA DE SEGUIDORES E VAMOS USAR AJAX PARA FAZER O SITE RESPONDER VISUALMENTE AO CLICK.
+VAMOS CRIAR LIKES E COMMENTS PARA POSTS USANDO AJAX PARA FAZER O SITE RESPONDER VISUALMENTE AO CLICK.
+VAMOS CRIAR O SISTEMA DE CHAT USANDO O CHANNELS, EU QUERO Q AS MENSAGENS SEJAM MANDADAS PARA UMA DATABASE.
+O SISTEMA DO DISCOVERY VAI SER FEITO USANDO MEIO Q UM RANDOM USANDO PESOS, NO CASO SERIA ATRAVÉS DE HASHTAGS, SEGUIDORES E LIKES. 
+PARA FINALIZAR O SITE PODEMOS CRIAR AS NOTIFICAÇÕES, EU TENHO DUAS IDEIAS PARA ISSO. UMA É USAR O CHANNELS PARA QUE VOCÊ CRIE UMA CONEXÃO COM SEU SEGUIDORES E CADA AÇÃO CRIA UM EVENTO E ELE É REPASSADO PARA AS OUTRAS CONEXÕES NO WEBSOCKET.
+OUTRA OPÇÃO SERIA USAR AJAX PARA ATUALIZAR A PORÇÃO DE NOTIFICAÇÕES DA PAGINA PERIODICAMENTE E USAR SIGNALS PARA MANDAR AS NOTIFICAÇÕES PARA A SESSÃO.
+
+
+to usando >>> codigo  para indicar codigo no meio do texto, pra bater o olho mais rapido
+nomeação de variaveis e de funções será feita com    app_nome_da_var
+nomeação de classes serão feitas com     AppNomeDaClasse
+nomeação de nomes em urls.py e classes de html são feitas com     nome-de-x
+
+
+DIA 1- VOU CRIAR O PROJETO E JÁ COMEÇAR USANDO UMA DB POSTGRESQL, VAMO CRIAR O VENV E JÁ INSTALAR DJANGO E PSYCOPG2 E CRIAR A DATABASE. A database será blog_instagram e a senha é do server é kekorsauce. Agora criado o venv e instalado o django e psycopg, vou criar o projeto core. Vamos no SETTINGS.py e vamos mudar a var DATABASES para DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'blog_instagram', 
+        'USER': 'postgres', 
+        'PASSWORD': 'kekorsauce',
+        'HOST': 'localhost', 
+        'PORT': '5432',
+    }
+}
+Agora vamos criar o app users e o app blog, vou por enq só fazer uma home mostrando se o usuario ta logado ou nn e  não vou usar as loginview e logoutview porque pelo visto elas vao ser removidas no django 5.0, então vamos fazer as views e pra isso vamos usar algumas funcs novas:
+-authenticate(username=x, password=y), essa aqui verifica se tem algum User com os atributos q vc passou, como password , email e/ou senha
+-login(request, user) apos autentcar o user, vc passa no login e pronto, ta logado
+-logout(request) essa só desloga o user
+Então basta criar as views de login, logout e register. Vou começar fazendo uma pagina simples no blog onde só mostra um texto falando se ta logado ou não.
+Eu tava querendo criar um grande static file que segurasse todos static fora dos apps, mas pelo visto o django tem um comando collectstatic que cuida disso, então vou fazer o metodo normal de cada app ter o --> static/appp/x.css  então vamos no settings.py e usar >>> STATIC_URL = 'static/'  e depois sempre o {% load static %}
+Settado as urls para os app e criado a home page e colocado os apps no settings.py,  vamos criar a register view.
+>>> from django.contrib.auth import logout, login, authenticate		para importar as funções que serão usadas nas views. Para registrar vamos pegar informações da de uma form, autenticar o usuario e cria-lo caso seja valido. PASSEI O DIA INTEIRO SOFRENDO, MAS CONSEGUI TER UM BOM ENTENDIMENTO EM FORMS.
+vamos fazer uma modelForm normal, adicionando os fields, a class Meta e por fim a validação
+>>>  Class TesteForm(forms.ModelForm):
+	field1 = forms.CharField(widget=forms.TextInput(attrs={'atribute': 'value'}))
+	field2 ...
+	
+	class Meta:
+	   model = Model         <-- isso define o modelo q será usado
+	   fields = ['field1', 'field2'] 	<-- isso define a ordem q os fields aparcem no Html
+	
+	def clean_field1(self):        
+	   test = self.cleaned_data['field1']
+	   if x:                                        <-- aqui ta um ex de clean_<field> method
+	      raise Validation Error('x aconteceu')
+	   else:
+	      return test
+
+	def clean_<field>(self):    <-- o return é o field escolhido
+	   ## validação ##
+
+	def clean(self):			    <-- o clean method é usado para validar vários fields e segue o esquema do exemplo acima
+	   ## validação de multiplos fields ##      <-- aqui o return é um self.cleaned_data completo
+	
+	def save(self):
+	   ## pega data, cria modelo, salva modelo e retorna modelo ##     <-- aqui é usado caso você queria salvar o modelo, como no register
+Iso foi o que eu consegui acumular hj no quesito Forms, widgets são representações de html, class meta define modelo e ordem de fields, as validações ou fazem o form passar no .is_valid() ou no caso de raise, volta a pagina com uma mensagem de escolha, o save vai ativar o .save() method do Model com os valores inputados.
+Na view do register eu peguei a form e capturei o Model retornado no .save() numa var e usei o login() e um redirect().
+Na view do login eu chequei o .is_valid() depois pegue o form.cleaned_data['field'] para usar no authenticated(), que cria um user, e então usar o login() no user.
+Na view do logout eu apenas user logout() e dei redirect().
+
+
+DIA 2- Agora eu vou usar os Signals para criar um modelo Profile. Criei um modelo UsersProfile com os fields user, pfp, bio e name. Agora vamos fazer os sigals-
+>>> 	from django.dispatch import receiver
+	from .models import UsersProfile
+	from  django.db.models.signals import post_save
+	from django.contrib.auth.models import User
+
+	@receiver(post_save, sender=User)                            <-- aqui fica a se vai ser antes ou depois do save() e sender, que é qual Model ativa o evento
+	def create_profile(sender, instance, created, **kwargs):     <-- created é um bool, instance é a instancia do modelo q ativou o evento
+ 	   if created:						     <-- o tutorial q eu vi separa assim os dois signals, ent to fazendo assim
+ 	       UsersProfile.objects.create(user=instance)
+
+	@receiver(post_save, sender=User)
+	def save_profile(sender, instance, **kwargs):
+	    instance.profile.save()
+Depois é necessário ir no apps.py e adicionar esse método na class
+>>>	def ready(self):
+            import users.signals
+Eu cofigurei no settings.py >>> MEDIA_URL =  'media/' >>> MEDIA_ROOT = os.path.join(BASE_DIR, 'media') e adicionei o snippet da doc no urls.py do core.
+				NÃO ESQUECE DE COLOCAR A PORRA DO .first() QUANDO ESTIVER FAZENDO QUERIES
+Eu fiz uma form simples para alterar o profile e fiz uma view, algo importante para lembrar é que deve-se ter Form(request.POST, request.FILES, instance=xyz) para que  a form receba as info do post, os arquivos e a instancia do modelo qnd foi pego. Para finalizar é preciso ter uma <form method="post" enctype="multipart/form-data">.
+To usando o >>> 'django_cleanup.apps.CleanupConfig' no INSTALLED_APPS e parece q isso exclui imagens antigas qnd vc sobe uma nova. Vai ter que baixar o django cleanup usando >>> pip install django-cleanup.
+Pra finalizar por agora a parte de users e partir pra criar os posts, likes, comments e followers, vamos apenas adicios os @login_required nas páginas
+>>> from django.contrib.auth.decorators import login_required e depois adicionar um regulador para o tamanho das imagens no .save() do modelo com 
+>>> def save(self, *args, **kwargs):
+        with Image.open(self.pfp) as im:
+            width = im.size[0]
+            height = im.size[1]
+            new_width  = 150
+            new_height = int(new_width * height / width) 
+            im = im.resize((new_width, new_height), Image.ANTIALIAS)
+            im.save(self.pfp.path, format='JPEG', quality=100)
+        super(UserProfile, self).save(*args, **kwargs)
+
+
