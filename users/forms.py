@@ -6,10 +6,11 @@ from django.contrib.auth import authenticate
 from .models import UsersProfile
 
 class UsersRegisterForm(UserCreationForm):
-    username = forms.CharField(label='Username', max_length=25)  
-    email = forms.EmailField(label='Email')  
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)  
-    password2 = forms.CharField(label='Confirm password', widget=forms.PasswordInput) 
+    username = forms.CharField(max_length=25, 
+                               widget=forms.TextInput(attrs={'placeholder': 'Insert your username'}))  
+    email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Insert your email'}))  
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Insert your password'}))  
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Confirm your password'})) 
 
     class Meta:
         model = User
@@ -53,8 +54,8 @@ class UsersRegisterForm(UserCreationForm):
 
 
 class UsersLoginForm(forms.ModelForm):
-    username_or_email = forms.CharField(label='username or email')
-    password = forms.CharField(label='password', widget=forms.PasswordInput)
+    username_or_email = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Insert your username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Insert your password'}))
 
     class Meta:
         model = User
@@ -92,7 +93,7 @@ class UsersProfileUpdateForm(forms.ModelForm):
     pfp = forms.ImageField(label='image')
     name = forms.CharField(widget=forms.TextInput)
     bio = forms.CharField(widget=forms.Textarea)
-
+    
     class Meta:
         model = UsersProfile
         fields = ['pfp', 'name', 'bio']

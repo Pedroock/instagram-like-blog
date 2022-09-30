@@ -8,6 +8,8 @@ O SISTEMA DO DISCOVERY VAI SER FEITO USANDO MEIO Q UM RANDOM USANDO PESOS, NO CA
 PARA FINALIZAR O SITE PODEMOS CRIAR AS NOTIFICAÇÕES, EU TENHO DUAS IDEIAS PARA ISSO. UMA É USAR O CHANNELS PARA QUE VOCÊ CRIE UMA CONEXÃO COM SEU SEGUIDORES E CADA AÇÃO CRIA UM EVENTO E ELE É REPASSADO PARA AS OUTRAS CONEXÕES NO WEBSOCKET.
 OUTRA OPÇÃO SERIA USAR AJAX PARA ATUALIZAR A PORÇÃO DE NOTIFICAÇÕES DA PAGINA PERIODICAMENTE E USAR SIGNALS PARA MANDAR AS NOTIFICAÇÕES PARA A SESSÃO.
 
+BIBLIOTECAS INTERESSANTES, django_cleanup, django_resized
+
 
 to usando >>> codigo  para indicar codigo no meio do texto, pra bater o olho mais rapido
 nomeação de variaveis e de funções será feita com    app_nome_da_var
@@ -85,15 +87,27 @@ Eu cofigurei no settings.py >>> MEDIA_URL =  'media/' >>> MEDIA_ROOT = os.path.j
 Eu fiz uma form simples para alterar o profile e fiz uma view, algo importante para lembrar é que deve-se ter Form(request.POST, request.FILES, instance=xyz) para que  a form receba as info do post, os arquivos e a instancia do modelo qnd foi pego. Para finalizar é preciso ter uma <form method="post" enctype="multipart/form-data">.
 To usando o >>> 'django_cleanup.apps.CleanupConfig' no INSTALLED_APPS e parece q isso exclui imagens antigas qnd vc sobe uma nova. Vai ter que baixar o django cleanup usando >>> pip install django-cleanup.
 Pra finalizar por agora a parte de users e partir pra criar os posts, likes, comments e followers, vamos apenas adicios os @login_required nas páginas
->>> from django.contrib.auth.decorators import login_required e depois adicionar um regulador para o tamanho das imagens no .save() do modelo com 
->>> def save(self, *args, **kwargs):
-        with Image.open(self.pfp) as im:
-            width = im.size[0]
-            height = im.size[1]
-            new_width  = 150
-            new_height = int(new_width * height / width) 
-            im = im.resize((new_width, new_height), Image.ANTIALIAS)
-            im.save(self.pfp.path, format='JPEG', quality=100)
-        super(UserProfile, self).save(*args, **kwargs)
+>>> from django.contrib.auth.decorators import login_required.
+Criei um model e form para os Posts com image, profile, desc, date e ficou assim:
+>>>  class BlogPosts(models.Model):
+    	profile = models.ForeignKey(UsersProfile, on_delete=models.CASCADE)
+    	image = ResizedImageField(size=[500, 1500], upload_to='post_images')
+    	desc = models.CharField(max_length=255)
+    	date = models.DateField(default=date.today())
+na image foi usado um regulador para o tamanho das imagens usando a biblioteca 
+django-resized >>> pip install django-resized veja a página no github, mas o uso vai ser no lugar do >>> models.ImageField , vc usa 
+>>> ResizedImageField(size=[500, 300], upload_to=get_image_path)
+Agora ta legal, mas ta começando a ficar bem confuso visualmente, então amanhã eu vou fazer o frontend disso tudo. Vou ter que planejar como esquematizar os templates e criar um sistema de nomeação pra ficar menos confuso, além de separar o css em vários arquivos para melhorar a leitura.
+
+
+DIA 3- Criei uma table de follower onde recebe follower e follower, isso foi usado pra parsear os posts e colocalos numa lista 
+>>> post_utils_list = [
+        [post_obj, like_form, ...],
+        [post_obj, like_form, ...],
+        ...
+    ]
+Isso deixa aberto para quando eu fizer os comment e likes. Agora foi feito a parte visual do header q vai ser usado em quase todas páginas e fiz os posts, só falta agora fazer a parte de criar posts e o login-regiser pra passar pra fazer a página de profile usano ajax.
+
+DIA 4- ACABEI fiz o visual do register,login,home,profile e profile update. Agora tá tudo bem no rumo pra eu conseguir fazer os btn de follow e adicionar o sistema de like.
 
 

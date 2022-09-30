@@ -1,0 +1,72 @@
+body{
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.users-login-background{
+    background-color: #ffffff;
+    box-sizing: border-box;
+    border: 1px solid #dbdbdb;
+    width: 400px;
+    padding: 15px;
+}
+.users-login-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.users-login-logo{
+    width: 175px;
+    object-fit: contain;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+.username_or_email, .password{
+    box-sizing: border-box;
+    padding: 5px;
+    width: 268px;
+    height: 38px;
+    margin-bottom: 10px;
+    background-color: #fafafa;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+    color: #262626;
+}.username_or_emai:focus, .password:focus{
+    border: 1px solid #a8a8a8;
+    outline: none;
+}
+.users-login-submit{
+    width: 268px;
+    height: 38px;
+    margin-bottom: 10px;
+    margin-top: 15px;
+    border-radius: 3px;
+    background-color: #0095f6;
+    box-sizing: border-box;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}.users-login-submit:hover{
+    cursor: pointer;
+}
+.users-login-login{
+    margin-top: 10px;
+    font-family: sans-serif;
+    color: #262626;
+}
+.users-login-link{
+    color: #0095f6;
+}
+label{
+    display: none;
+}
+li{
+    font-family: sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    color: red;
+    margin-bottom: 5px;
+}

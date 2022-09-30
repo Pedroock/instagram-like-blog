@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Instagram</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="{% static 'blog/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/blog_header_base.css' %}">
+    {% block css %}
+    {% endblock css %}
+</head>
+<body>
+    <header class="blog-header">
+        <div>
+            <a href="{% url 'home' %}">
+                <img class="blog-header-main-logo" src="{% static 'blog/logos/ig-text-logo.png' %}" alt="logo">
+            </a>
+        </div>
+        <div class="blog-header-searchbar">
+            <div class="placeholder">placeholder</div>
+        </div>
+        <div class="blog-header-buttons">
+            <a href="{% url 'home' %}">
+                <img class="blog-header-logo" src="{% static 'blog/logos/logo-home.png' %}" alt="home">
+            </a>
+            <a href=""><img class="blog-header-logo" src="{% static 'blog/logos/logo-direct.png' %}" alt="direct">
+            </a>
+            {% if not home %}
+            <a href="{% url 'home' %}">
+                <img class="blog-header-logo" src="{% static 'blog/logos/logo-upload.png' %}" alt="upload">
+            </a>
+            {% else %}
+            <a href="" class="header-upload-button">
+                <img class="blog-header-logo" src="{% static 'blog/logos/logo-upload.png' %}" alt="upload">
+            </a>
+            {% endif %}
+            <a href="">
+                <img class="blog-header-logo" src="{% static 'blog/logos/logo-discover.png' %}" alt="discover">
+            </a>
+            <a href="">
+                <img class="blog-header-logo" src="{% static 'blog/logos/logo-notif.png' %}" alt="notification">
+            </a>
+            <a href="{% url 'profile' request.user.pk %}">
+                <img class="blog-header-pfp" src="{{ request.user.profile.pfp.url }}" alt="profile">
+            </a>
+        </div>
+    </header>
+
+    
+    {% block content %}
+    {% endblock content %}
+   
+    {% block form %}
+    {% endblock form %}
+
+    {% block profileposts %}
+    {% endblock profileposts %}
+
+    {% block ajax %}
+    {% endblock ajax %}
+
+    {% block popup %}
+    {% endblock popup %}
+</body>
+</html>

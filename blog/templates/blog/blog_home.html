@@ -1,0 +1,77 @@
+{% extends 'blog/blog_header_base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'blog/blog_home.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/blog_home_create_form.css' %}">
+{% endblock css %}
+
+{% block content %}
+    <!-- Post template -->
+    <div class="blog-posts-content-section">
+        <div class="blog-posts-section">
+            {% for post_list in post_utils_list %}
+                <!--  0-posts_obj, 1-likeform, 2-like obj, 3-commentform, 4-comment obj, 5-commetfirst -->
+                <div class="blog-post">
+                    <div class="blog-post-top">
+                        <a href="{% url 'profile' post_list.0.profile.user.pk %}">
+                            <img class="blog-post-top-pfp" src="{{ post_list.0.profile.pfp.url }}" alt="pfp">
+                        </a>
+                        <a href="{% url 'profile' post_list.0.profile.user.pk %}">
+                            <h1 class="blog-post-top-username">{{ post_list.0.profile.user.username }}</h1>
+                        </a>
+                    </div>
+                    <img class="blog-post-content" src="{{ post_list.0.image.url }}" alt="post content">
+                    <div class="blog-post-bottom">
+                        <div class="blog-post-bottom-buttons">
+                            <button class="blog-post-like"> like</button>
+                            <button class="blog-post-comment">comment</button>
+                        </div>
+                        <h1 class="blog-post-bottom-likes">123 likes</h1>
+                        <div class="blog-post-bottom-desc-comment">
+                            <h1 class="blog-post-bottom-desc-comment-username">{{ post_list.0.profile.user.username }}</h1>
+                            <p class="blog-post-bottom-desc-comment-content">{{ post_list.0.desc }}</p>
+                        </div>
+                        <p class="blog-post-bottom-comment-count">see all todos commens</p>
+                        <div class="blog-post-bottom-desc-comment">
+                            <h1 class="blog-post-bottom-desc-comment-username">nome</h1>
+                            <p class="blog-post-bottom-desc-comment-content">desc</p>
+                        </div>
+                        <h1 class="post-bottom-date">{{ post_list.0.date }}</h1>
+                        <p class="form-placeholdr">form placeholder</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <!-- end Post template -->
+{% endblock content %}
+
+{% block form %}
+    <div class="home-create-form-background">
+        <div class="home-create-form">
+            <h1 class="home-create-form-title">Create a post</h1>
+            <img class="home-create-form-image" src="{% static 'blog/logos/logo-upload2.png' %}" alt="upload">
+            <h1 class="home-create-form-button-fake">Select an image</h1>
+            {{ form.image }}
+            {{ form.desc }}
+            <button class="home-create-form-submit">Post</button>
+        </div>
+        <p class="home-create-close-button">+</p>
+    </div>
+
+    <script>
+        const uploadButton = document.querySelector('.header-upload-button')
+        uploadButton.addEventListener('click', function(e){
+            e.preventDefault()   // pra n dar reload na pag
+            let popUpBackground = document.querySelector('.home-create-form-background')
+            popUpBackground.style.display = 'flex'
+        })
+        
+        const uploadCloseButton = document.querySelector('.home-create-close-button')
+        uploadCloseButton.addEventListener('click', function(){
+            let popUpBackground = document.querySelector('.home-create-form-background')
+            popUpBackground.style.display = 'none'
+        })
+    </script>
+{% endblock form %}

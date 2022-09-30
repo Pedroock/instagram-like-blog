@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="{% static 'blog/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'users/users_login.css' %}">
+</head>
+<body>
+    <div class="users-login-background">
+        <form class="users-login-form" method="post">
+            <img class="users-login-logo" src="{% static 'blog/logos/ig-text-logo.png' %}" alt="logo">
+            {% csrf_token %}
+            {{ form }}
+            <button class="users-login-submit" type="submit">Sign Ip</button>
+            <p class="users-login-login">Don't have an account? 
+                <a class="users-login-link" href="{% url 'register' %}">Sign Up</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

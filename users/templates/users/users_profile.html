@@ -1,0 +1,33 @@
+{% extends 'blog/blog_header_base.html' %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'users/users_profile.css' %}">
+{% endblock css %}
+
+
+{% block content %}
+    <div class="users-profile-header">
+        <img class="users-profile-header-pfp" src="{{ profile.pfp.url }}" alt="pfp">
+        <div class="users-profile-header-info">
+            <div class="users-profile-header-info-username-wrapper">
+                <h1 class="users-profile-header-info-username">{{ profile.user.username }}</h1>
+                <a class="users-profile-header-info-edit" href="{% url 'profile-update' profile.user.pk %}">
+                    Edit Profile
+                </a>
+            </div>
+            <div class="users-profile-header-info-numbers">
+                <h1 class="publi-number">x publi</h1>
+                <h1 class="follower-number">x follower</h1>
+                <h1 class="followed-number">x follwed</h1>
+            </div>
+            <h1 class="users-profile-header-info-name">{{ profile.name }}</h1>
+            <p class="users-profile-header-info-bio">{{ profile.bio }}</p>
+        </div>
+    </div>
+    <div class="users-profile-posts">
+        {% for post in posts %}
+            <img class="users-profile-posts-image" src="{{ post.image.url }}" alt="post">
+        {% endfor %}
+    </div>
+{% endblock content %}

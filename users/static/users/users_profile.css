@@ -1,0 +1,74 @@
+/* Profile */
+.users-profile-header{
+    margin-top: 70px;
+    margin-left: 20%;
+    margin-right: 20%;
+    display: flex;
+    align-items: center;
+    font-family: sans-serif;
+    padding-bottom: 30px;
+    border-bottom: #dbdbdb 1px solid;
+}
+.users-profile-header-pfp{
+    width: 150px;
+    border-radius: 50%;
+    object-fit: contain;
+} 
+.users-profile-header-info{
+    margin-left: 110px;
+}
+.users-profile-header-info-username-wrapper{
+    display: flex;
+    align-items: center;
+}
+.users-profile-header-info-username{
+    color: #262626;
+    font-size: 28px;
+    margin-right: 20px;
+}
+.users-profile-header-info-edit{    
+    color: #262626;
+    font-size: 14px;
+    font-weight: bold;
+    width: 95px;
+    height: 30px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}  
+.users-profile-header-info-numbers{
+    display: flex;
+    margin-top: 20px;
+}.users-profile-header-info-numbers *{
+    margin-right: 25px;
+    color: #262626;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+.users-profile-header-info-name{
+    color: #262626;
+    font-size: 16px;
+    font-weight: bold;
+}
+.users-profile-header-info-bio{
+    margin-top: 5px;
+    color: #262626;
+    font-size: 14px;
+}
+/* Posts */
+.users-profile-posts{
+    margin-left: 20%;
+    margin-right: 20%;
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 257px 257px 257px;
+    gap: 17px;
+    margin-bottom: 50px;
+}
+.users-profile-posts-image{
+    width: 257px;
+    height: 257px;
+    object-fit: cover;
+}

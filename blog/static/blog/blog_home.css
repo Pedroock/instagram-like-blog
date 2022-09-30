@@ -1,0 +1,79 @@
+.blog-posts-content-section{
+    margin-top: 80px;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+}
+.blog-posts-section{
+    
+}
+/* Post */
+.blog-post{
+    border: 1px solid #dbdbdb;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 15px;
+}
+/* Top Post */
+.blog-post-top{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+}
+.blog-post-top-pfp{
+    height: 32px;
+    object-fit: contain;
+    margin-right: 10px;
+}
+.blog-post-top-username{
+    font-size: 14px;
+    color: #262626;
+    font-weight: bold;
+}
+/* Content */
+.blog-post-content{
+    width: 470px;
+    object-fit: contain;
+}
+/* Bottom */
+.blog-post-bottom{
+    padding: 10px;
+}
+.blog-post-bottom-buttons{
+    margin-bottom: 10px;
+}
+.blog-post-like{
+    height: 24px;
+}
+.blog-post-comment{
+    height: 24px;
+}
+.blog-post-bottom-likes{
+    font-size: 14px;
+    color: #262626;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.blog-post-bottom-desc-comment{
+    display: flex;
+    margin-bottom: 10px;
+}
+.blog-post-bottom-comment-count{
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-bottom: 10px;
+}
+.blog-post-bottom-desc-comment-username{
+    font-size: 14px;
+    color: #262626;
+    font-weight: bold;
+}
+.blog-post-bottom-desc-comment-content{
+    font-size: 14px;
+    color: black;
+}
+.post-bottom-date{
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-bottom: 10px;
+}

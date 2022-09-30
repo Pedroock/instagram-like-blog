@@ -1,0 +1,91 @@
+body{
+    display: flex;
+    justify-content: center;
+    font-family: sans-serif;
+}
+.users-profile-update-wrapper{
+    margin-top: 80px;
+    width: 635px;
+    border: 1px solid #dbdbdb;
+    padding-top: 25px;
+}
+.users-profile-update-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.users-profile-update-image{
+    height: 38px;
+    width: 38px;
+    border-radius: 50%;
+    object-fit: contain;
+    margin-right: 25px;
+}
+.users-profile-update-name{
+    font-size: 20px;
+    color: #262626;
+}
+.users-profile-update-input{
+    font-size: 14px;
+    color: #0095f6;
+    font-weight: bold;
+    margin-top: 3px;
+}
+/* Pfp alter button */
+.users-profile-update-form-pfp{
+    color: white;
+}
+.users-profile-update-form-pfp *{
+    display: none;
+}
+#id_pfp{
+    display: block;
+    position: absolute;
+    top: 127px;
+    left: 48%;
+    opacity: 0;
+    width: 140px;
+}
+
+.users-profile-update-form-name{
+    margin-top: 5px;
+}
+#id_name{
+    width: 300px;
+    padding: 3px;
+    box-sizing: border-box;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    color: #262626;
+}
+.users-profile-update-form-bio{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+#id_bio{
+    width: 300px;
+    height: 70px;
+    padding: 3px;
+    box-sizing: border-box;
+    margin-left: 25px;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    color: #262626;
+}
+.users-profile-update-form-button{
+    margin-top: 20px;
+    margin-bottom: 25px;
+    width: 75px;
+    height: 30px;
+    border-radius: 3px;
+    background-color: #0095f6;
+    box-sizing: border-box;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}.users-profile-update-form-button:hover{
+    cursor: pointer;
+}

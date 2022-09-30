@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from .forms import UsersLoginForm, UsersProfileUpdateForm, UsersRegisterForm
 from .models import UsersProfile
 from django.contrib.auth.decorators import login_required
+from blog.models import BlogPosts
 
 
 # Create your views here.
@@ -20,7 +21,7 @@ def users_register(request):
     context={
         'form': form
     }    
-    return render(request, 'users/register.html', context)
+    return render(request, 'users/users_register.html', context)
 
 
 def users_login(request):
@@ -39,7 +40,7 @@ def users_login(request):
     context={
         'form': form
     }    
-    return render(request, 'users/login.html', context)
+    return render(request, 'users/users_login.html', context)
 
 
 def users_logout(request):
@@ -51,8 +52,11 @@ def users_logout(request):
 def users_profile(request, pk):
     profile_user = User.objects.filter(pk=pk).first()
     profile = UsersProfile.objects.filter(user=profile_user).first()
-    context = {'profile': profile}
-    return render(request, 'users/profile.html', context)
+    context = {
+        'profile': profile,
+        'posts': BlogPosts.objects.filter(profile=profile)
+        }
+    return render(request, 'users/users_profile.html', context)
 
 
 @login_required
@@ -66,5 +70,8 @@ def users_profile_update(request, pk):
             return redirect('profile', pk)
     else:
         form = UsersProfileUpdateForm(instance=profile)
-    context = {'form': form}
-    return render(request, 'users/profile_update.html', context)
+    context = {
+        'form': form,
+        'profile': profile
+    }
+    return render(request, 'users/users_profile_update.html', context)
