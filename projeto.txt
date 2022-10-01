@@ -17,7 +17,8 @@ nomeação de classes serão feitas com     AppNomeDaClasse
 nomeação de nomes em urls.py e classes de html são feitas com     nome-de-x
 
 
-DIA 1- VOU CRIAR O PROJETO E JÁ COMEÇAR USANDO UMA DB POSTGRESQL, VAMO CRIAR O VENV E JÁ INSTALAR DJANGO E PSYCOPG2 E CRIAR A DATABASE. A database será blog_instagram e a senha é do server é kekorsauce. Agora criado o venv e instalado o django e psycopg, vou criar o projeto core. Vamos no SETTINGS.py e vamos mudar a var DATABASES para DATABASES = {
+DIA 1-
+ VOU CRIAR O PROJETO E JÁ COMEÇAR USANDO UMA DB POSTGRESQL, VAMO CRIAR O VENV E JÁ INSTALAR DJANGO E PSYCOPG2 E CRIAR A DATABASE. A database será blog_instagram e a senha é do server é kekorsauce. Agora criado o venv e instalado o django e psycopg, vou criar o projeto core. Vamos no SETTINGS.py e vamos mudar a var DATABASES para DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'blog_instagram', 
@@ -65,7 +66,8 @@ Na view do login eu chequei o .is_valid() depois pegue o form.cleaned_data['fiel
 Na view do logout eu apenas user logout() e dei redirect().
 
 
-DIA 2- Agora eu vou usar os Signals para criar um modelo Profile. Criei um modelo UsersProfile com os fields user, pfp, bio e name. Agora vamos fazer os sigals-
+DIA 2-
+ Agora eu vou usar os Signals para criar um modelo Profile. Criei um modelo UsersProfile com os fields user, pfp, bio e name. Agora vamos fazer os sigals-
 >>> 	from django.dispatch import receiver
 	from .models import UsersProfile
 	from  django.db.models.signals import post_save
@@ -100,7 +102,8 @@ django-resized >>> pip install django-resized veja a página no github, mas o us
 Agora ta legal, mas ta começando a ficar bem confuso visualmente, então amanhã eu vou fazer o frontend disso tudo. Vou ter que planejar como esquematizar os templates e criar um sistema de nomeação pra ficar menos confuso, além de separar o css em vários arquivos para melhorar a leitura.
 
 
-DIA 3- Criei uma table de follower onde recebe follower e follower, isso foi usado pra parsear os posts e colocalos numa lista 
+DIA 3- 
+Criei uma table de follower onde recebe follower e follower, isso foi usado pra parsear os posts e colocalos numa lista 
 >>> post_utils_list = [
         [post_obj, like_form, ...],
         [post_obj, like_form, ...],
@@ -108,6 +111,66 @@ DIA 3- Criei uma table de follower onde recebe follower e follower, isso foi usa
     ]
 Isso deixa aberto para quando eu fizer os comment e likes. Agora foi feito a parte visual do header q vai ser usado em quase todas páginas e fiz os posts, só falta agora fazer a parte de criar posts e o login-regiser pra passar pra fazer a página de profile usano ajax.
 
-DIA 4- ACABEI fiz o visual do register,login,home,profile e profile update. Agora tá tudo bem no rumo pra eu conseguir fazer os btn de follow e adicionar o sistema de like.
+
+DIA 4- 
+ACABEI fiz o visual do register,login,home,profile e profile update. Agora tá tudo bem no rumo pra eu conseguir fazer os btn de follow e adicionar o sistema de like.
 
 
+DIA 5-
+ Eu importi jquery, já que vai ser útil mais pra frente no projeto
+>>> <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+Hoje eu criei os popup de lista de followers no profile e depois parti para fazer os botoes de follow e unf.
+pra isso eu criei um app AJAX e usei ele para lidar com o save() e delete(), a view ficou assim.
+>>>     from users.forms import UsersFollowersForm
+	from django.http import JsonResponse
+	from django.core import serializers
+	from django.views.decorators.csrf import csrf_exempt
+	from users.models import UsersFollowers
+	# Create your views here.
+	@csrf_exempt
+	def AjaxProfileFollow(request):
+	    if request.method == 'POST':     <- recebe o post q foi mandado pelo ajax
+	        form = UsersFollowersForm(request.POST)
+	        if form.is_valid():
+	            instance = form.save()
+	            # serializar é transforma info pra o ajax joga pro outro lado
+	            ser_instance = serializers.serialize('json', [instance,])
+	            return JsonResponse({"instance": ser_instance}, status=200)  <- devolve pro success no json
+	        else:
+	            return JsonResponse({"error": form.errors}, status=400)
+	    else:
+	        return JsonResponse({"error": form.erros}, status=400)
+	        # 200 deu certo, 400 deu nn
+Agora a parte do Ajax no front q manda e recebe os pedido
+<script>
+        $('.users-profile-follow-form').on('submit', function(e){     <- seleciona a form q vai manda info
+            console.log('houve click')
+            // pelo visto essa parte do 'e' é pra n da reset na pag   <- o eu do passado estava correto
+            e.preventDefault();
+            // serializar pra jogar pro url do app ajax
+            var serializeData = $(this).serialize();   
+            $.ajax({
+                type:'POST',                           <- aqui é metodo post pra receber no back
+                url: '{% url "profile-follow" %}',	<- aqui indica a view q recebe o post
+                data: serializeData,			<- a info q vai ser mandada
+                success: function(response){		<- no succes é oq vai ser feito qnd da certo
+                    $(".users-profile-header-info-numbers-wrapper").load("{% url 'profile' profile.user.pk %}  .users-							                   profile-header-info-numbers", function(){
+                        let followBtn = document.querySelector('.users-profile-header-info-follow')
+                        let unfollowBtn = document.querySelector('.users-profile-header-info-unfollow')
+                        followBtn.style.display = 'none'
+                        unfollowBtn.style.display = 'inline-block'
+                    });
+                },
+                error: function(response){
+                    console.log('erro')
+                }
+            });
+        })
+    </script>
+Hoje a noite eu vou deixar tudo certinho, pq ainda preciso dar condição nos botoes, adicionar e remover o profile do user das listas meio q manual já q dar reload nas listas n ta funcionando e depois colcoar as sugestões na home.
+Vamos ver se sobra tempo também para começar os likes/comments.
+Coloquei condição nos btns, se o request.user.profile in followers ai esconde o botão de follower, ai nos eventlistener do ajax ele troca o botão que aparece, roda as funções que adicionam o click nas popup e usa $(x-div).load({% url 'profile' profile.user.pk %} y-div) para atualizar a lista do popup.
+Hoje tava meio duro de tempo, então a parte sugestão de followers eu faço amanhã(hj né oq já é 0:35) e começo a parte dos like/comment.
+
+
+DIA 6-

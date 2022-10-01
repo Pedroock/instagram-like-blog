@@ -6,13 +6,10 @@ from django_resized import ResizedImageField
 
 class UsersProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    pfp = ResizedImageField(size=[500, 1500], upload_to='profile_pics', default='default_pfp.png')
+    pfp = ResizedImageField(size=[150, 150], upload_to='profile_pics', default='default_pfp.png')
     name = models.CharField(max_length=25)
     bio = models.CharField(max_length=255)
     
-    def __str__(self):
-        return f"{self.user.username}'s profile"
-
 
 class UsersFollowers(models.Model):
     follower = models.ForeignKey(UsersProfile, on_delete=models.CASCADE, related_name='follwer')

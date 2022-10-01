@@ -3,6 +3,7 @@
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'users/users_profile.css' %}">
+    <link rel="stylesheet" href="{% static 'users/users_profile_popup.css' %}">
 {% endblock css %}
 
 
@@ -12,15 +13,55 @@
         <div class="users-profile-header-info">
             <div class="users-profile-header-info-username-wrapper">
                 <h1 class="users-profile-header-info-username">{{ profile.user.username }}</h1>
-                <a class="users-profile-header-info-edit" href="{% url 'profile-update' profile.user.pk %}">
-                    Edit Profile
-                </a>
+                <!-- Edit profile ou followe/unf -->
+                {% if profile == request.user.profile %}
+                    <a class="users-profile-header-info-edit" href="{% url 'profile-update' profile.user.pk %}">
+                        Edit Profile
+                    </a>
+                {% else %}
+                    <!-- Follow and Unfollow forms -->
+                        <form class="users-profile-follow-form" method="POST" enctype="multipart/form-data"> 
+                            {% csrf_token %}
+                            <div class="users-profile-header-form-hide">
+                                {{ follow_form }}
+                            </div>  
+                            <button type="submit" class="users-profile-header-info-follow">Follow</button>
+                        </form>
+                        <form class="users-profile-unfollow-form" method="POST" enctype="multipart/form-data"> 
+                            {% csrf_token %}
+                            <div class="users-profile-header-form-hide">
+                                {{ follow_form }}
+                            </div>  
+                            <button type="submit" class="users-profile-header-info-unfollow">Unfollow</button>
+                        </form>
+                        <!--
+                            condiiconal para qual btn aparece
+                        -->
+                        {% if request.user.profile in followers %}
+                            <script>
+                                document.querySelector('.users-profile-header-info-follow').style.display = 'none'
+                            </script>
+                            {% else %}
+                            <script>
+                                document.querySelector('.users-profile-header-info-unfollow').style.display = 'none'
+                            </script>
+                        {% endif %}
+                    <!-- end Follow and Unfollow forms --> 
+                {% endif %}
             </div>
-            <div class="users-profile-header-info-numbers">
-                <h1 class="publi-number">x publi</h1>
-                <h1 class="follower-number">x follower</h1>
-                <h1 class="followed-number">x follwed</h1>
+            <!--
+                Aqui é a parte que vai ser reloadada no click do ajax
+            -->
+            <div class="users-profile-header-info-numbers-wrapper">
+                <div class="users-profile-header-info-numbers">
+                    <h1 class="publi-number"><p>{{ posts|length }}</p> posts</h1>
+                    <h1 class="follower-number"><p>{{ followers|length }}</p> followers</h1>
+                    <h1 class="followed-number"><p>{{ followeds|length }}</p> follwing</h1>
+                </div>
             </div>
+            <!--
+                Aqui acaba a parte que vai ser reloadada no click do ajax
+            -->
             <h1 class="users-profile-header-info-name">{{ profile.name }}</h1>
             <p class="users-profile-header-info-bio">{{ profile.bio }}</p>
         </div>
@@ -31,3 +72,136 @@
         {% endfor %}
     </div>
 {% endblock content %}
+
+
+{% block popup %}
+<!--
+    Aqui nas popup do follower vai sempre ter uma peculiaridade, o
+-->
+<div class="users-profile-followers-popup-background-wrapper">
+    <div class="users-profile-followers-popup-background">
+        <div class="users-profile-follower-popup">
+            <h1 class="users-profile-follower-popup-title">Followers</h1>
+            {% for follower in followers %}
+                <div class="users-profile-follower-popup-follower">
+                    <a href="{% url 'profile' follower.user.pk %}">
+                        <img class="users-profile-follower-pfp" src="{{ follower.pfp.url }}" alt="pfp">
+                    </a>
+                    <a href="{% url 'profile' follower.user.pk %}">
+                        <h1 class="users-profile-follower-username">{{ follower.user.username }}</h1>
+                    </a>
+                </div>
+            {% endfor %}
+            <p class="users-profile-follower-popup-close">+</p>
+        </div>
+        <script>
+            var addFollowerPopup = function(){
+                let followerCount = document.querySelector('.follower-number')
+                followerCount.addEventListener('click', function(){
+                    let popup = document.querySelector('.users-profile-followers-popup-background')
+                    popup.style.display = 'flex'
+                    let close = document.querySelector('.users-profile-follower-popup-close')
+                    close.addEventListener('click', function(){
+                        popup.style.display = 'none'
+                    })
+                })
+            }
+            addFollowerPopup()
+        </script>
+    </div>
+</div>
+
+<div class="users-profile-followeds-popup-background">
+    <div class="users-profile-followed-popup">
+        <h1 class="users-profile-followed-popup-title">Following</h1>
+        {% for followed in followeds %}
+            <div class="users-profile-followed-popup-followed">
+                <a href="{% url 'profile' followed.user.pk %}">
+                    <img class="users-profile-followed-pfp" src="{{ followed.pfp.url }}" alt="pfp">
+                </a>
+                <a href="{% url 'profile' followed.user.pk %}">
+                    <h1 class="users-profile-followed-username">{{ followed.user.username }}</h1>
+                </a>
+            </div>
+        {% endfor %}
+        <p class="users-profile-followed-popup-close">+</p>
+    </div>
+    <script>
+        var addFollowedPopup = function(){
+            let followedCount = document.querySelector('.followed-number')
+            followedCount.addEventListener('click', function(){
+                let popup = document.querySelector('.users-profile-followeds-popup-background')
+                popup.style.display = 'flex'
+                let close = document.querySelector('.users-profile-followed-popup-close')
+                close.addEventListener('click', function(){
+                    popup.style.display = 'none'
+                })
+            })
+        }
+        addFollowedPopup()
+    </script>
+</div>
+{% endblock popup %}
+
+
+{% block ajax %}
+    <script>
+        $('.users-profile-follow-form').on('submit', function(e){
+            console.log('houve click')
+            // pelo visto essa parte do 'e' é pra n da reset na pag
+            e.preventDefault();
+            // serializar pra jogar pro url do app ajax
+            var serializeData = $(this).serialize();
+            $.ajax({
+                type:'POST',
+                url: '{% url "profile-follow" %}',
+                data: serializeData,
+                success: function(response){
+                    $(".users-profile-header-info-numbers-wrapper").load("{% url 'profile' profile.user.pk %}  .users-profile-header-info-numbers", function(){
+                        let followBtn = document.querySelector('.users-profile-header-info-follow')
+                        let unfollowBtn = document.querySelector('.users-profile-header-info-unfollow')
+                        followBtn.style.display = 'none'
+                        unfollowBtn.style.display = 'inline-block'
+                        // add click on follower popups and reload popup
+                        $('.users-profile-followers-popup-background-wrapper').load("{% url 'profile' profile.user.pk %} .users-profile-followers-popup-background ")
+                        addFollowedPopup()
+                        addFollowerPopup()
+                    });
+                },
+                error: function(response){
+                    console.log('erro')
+                }
+            });
+        })
+    </script>
+
+    <script>
+        $('.users-profile-unfollow-form').on('submit', function(e){
+            console.log('houve click')
+            // pelo visto essa parte do 'e' é pra n da reset na pag
+            e.preventDefault();
+            // serializar pra jogar pro url do app ajax
+            var serializeData = $(this).serialize();
+            $.ajax({
+                type:'POST',
+                url: '{% url "profile-unfollow" %}',
+                data: serializeData,
+                success: function(response){
+                    $(".users-profile-header-info-numbers-wrapper").load("{% url 'profile' profile.user.pk %}  .users-profile-header-info-numbers", function(){
+                        let followBtn = document.querySelector('.users-profile-header-info-follow')
+                        let unfollowBtn = document.querySelector('.users-profile-header-info-unfollow')
+                        followBtn.style.display = 'inline-block'
+                        unfollowBtn.style.display = 'none'
+                        // add click on follower popups and reload popup 
+                        $('.users-profile-followers-popup-background-wrapper').load("{% url 'profile' profile.user.pk %} .users-profile-followers-popup-background ")
+                        addFollowedPopup()
+                        addFollowerPopup()
+                    });
+                },
+                error: function(response){
+                    console.log('erro')
+                }
+            });
+        })
+    </script>
+{% endblock ajax %}

@@ -1,0 +1,57 @@
+.users-profile-followers-popup-background, .users-profile-followeds-popup-background{
+    background-color: rgb(0, 0, 0, 0.7);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    font-family: sans-serif;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+.users-profile-follower-popup, .users-profile-followed-popup{
+    width: 400px;
+    height: 400px;
+    background-color: #ffffff;
+    border: 1px solid #dbdbdb;
+    border-radius: 10px;
+}
+.users-profile-follower-popup-title, .users-profile-followed-popup-title{
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dbdbdb;
+    font-size: 16px;
+    color: #262626;
+    font-weight: bold;
+    text-align: center;
+}
+.users-profile-follower-popup-follower, .users-profile-followed-popup-followed{
+    margin-top: 15px;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+}
+.users-profile-follower-pfp, .users-profile-followed-pfp{
+    height: 44px;
+    width: 44px;
+    object-fit: contain;
+    border-radius: 50%;
+}
+.users-profile-follower-username, .users-profile-followed-username{
+    font-size: 14px;
+    color: #262626;
+    margin-left: 10px;
+    font-weight: bold;
+}
+.users-profile-follower-popup-close, .users-profile-followed-popup-close{
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    transform: rotate(45deg);
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+}.users-profile-follower-popup-close:hover, .users-profile-followed-popup-close:hover{
+    cursor: pointer;
+}

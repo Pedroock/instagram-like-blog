@@ -37,7 +37,32 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}  
+}.users-profile-header-info-follow{
+    width: 92px;
+    height: 30px;
+    border-radius: 3px;
+    background-color: #0095f6;
+    box-sizing: border-box;
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}.users-profile-header-info-follow:hover{
+    cursor: pointer;
+}
+.users-profile-header-info-unfollow{
+    width: 92px;
+    height: 30px;
+    border-radius: 3px;
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    box-sizing: border-box;
+    color: #262626;
+    font-weight: bold;
+    font-size: 14px;
+}.users-profile-header-info-unfollow:hover{
+    cursor: pointer;
+}
 .users-profile-header-info-numbers{
     display: flex;
     margin-top: 20px;
@@ -46,6 +71,14 @@
     color: #262626;
     font-size: 16px;
     margin-bottom: 20px;
+    display: flex;
+}.users-profile-header-info-numbers * p{
+    font-weight: bold;
+    width: fit-content;
+    margin-right: 10px;
+}
+.publi-number:hover, .follower-number:hover, .followed-number:hover{
+    cursor: pointer;
 }
 .users-profile-header-info-name{
     color: #262626;
@@ -56,6 +89,10 @@
     margin-top: 5px;
     color: #262626;
     font-size: 14px;
+}
+
+.users-profile-header-form-hide{
+    display: none;
 }
 /* Posts */
 .users-profile-posts{

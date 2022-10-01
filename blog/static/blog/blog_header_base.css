@@ -42,6 +42,12 @@ Header
     object-fit: contain;
     border-radius: 50%;
 }
+.blog-header-logout{
+    position: relative;
+    height: 23px;
+    width: 23px;
+    right: -175px;
+}   
 /*
 end Header
 */

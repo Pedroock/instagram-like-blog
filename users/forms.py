@@ -1,9 +1,10 @@
+from dataclasses import field
 from django import forms
 from django.contrib.auth.models import User
 from django.forms import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-from .models import UsersProfile
+from .models import UsersProfile, UsersFollowers
 
 class UsersRegisterForm(UserCreationForm):
     username = forms.CharField(max_length=25, 
@@ -99,3 +100,7 @@ class UsersProfileUpdateForm(forms.ModelForm):
         fields = ['pfp', 'name', 'bio']
 
     
+class UsersFollowersForm(forms.ModelForm):
+    class Meta:
+        model = UsersFollowers
+        fields = ['follower', 'followed']

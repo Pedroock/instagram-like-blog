@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'blog/blog_header_base.css' %}">
     {% block css %}
     {% endblock css %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
     <header class="blog-header">
@@ -27,14 +28,14 @@
             </a>
             <a href=""><img class="blog-header-logo" src="{% static 'blog/logos/logo-direct.png' %}" alt="direct">
             </a>
-            {% if not home %}
-            <a href="{% url 'home' %}">
-                <img class="blog-header-logo" src="{% static 'blog/logos/logo-upload.png' %}" alt="upload">
-            </a>
+            {% if home %}
+                <a href="" class="header-upload-button">
+                    <img class="blog-header-logo" src="{% static 'blog/logos/logo-upload.png' %}" alt="upload">
+                </a>
             {% else %}
-            <a href="" class="header-upload-button">
-                <img class="blog-header-logo" src="{% static 'blog/logos/logo-upload.png' %}" alt="upload">
-            </a>
+                <a href="{% url 'home' %}">
+                    <img class="blog-header-logo" src="{% static 'blog/logos/logo-upload.png' %}" alt="upload">
+                </a>
             {% endif %}
             <a href="">
                 <img class="blog-header-logo" src="{% static 'blog/logos/logo-discover.png' %}" alt="discover">
@@ -45,6 +46,9 @@
             <a href="{% url 'profile' request.user.pk %}">
                 <img class="blog-header-pfp" src="{{ request.user.profile.pfp.url }}" alt="profile">
             </a>
+            <a href="{% url 'logout' %}">
+                <img class="blog-header-logout" src="{% static 'blog/logos/logo-logout.png' %}" alt="logout">
+            </a>
         </div>
     </header>
 
@@ -52,16 +56,16 @@
     {% block content %}
     {% endblock content %}
    
+    {% block homeside %}
+    {% endblock homeside %}
+
     {% block form %}
     {% endblock form %}
 
-    {% block profileposts %}
-    {% endblock profileposts %}
+    {% block popup %}
+    {% endblock popup %}
 
     {% block ajax %}
     {% endblock ajax %}
-
-    {% block popup %}
-    {% endblock popup %}
 </body>
 </html>

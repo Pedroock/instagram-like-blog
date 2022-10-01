@@ -2,6 +2,7 @@ body{
     display: flex;
     justify-content: center;
     font-family: sans-serif;
+    color: #262626;
 }
 .users-profile-update-wrapper{
     margin-top: 80px;
@@ -41,13 +42,16 @@ body{
 }
 #id_pfp{
     display: block;
-    position: absolute;
-    top: 127px;
-    left: 48%;
+    position: relative;
+    top: -30px;
+    left: 25%;
     opacity: 0;
-    width: 140px;
+    width: 130px;
+    height: 14px;
+    background-color: red;
+}#id_pfp:hover{
+    cursor: pointer;
 }
-
 .users-profile-update-form-name{
     margin-top: 5px;
 }

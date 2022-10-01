@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
-from .forms import UsersLoginForm, UsersProfileUpdateForm, UsersRegisterForm
-from .models import UsersProfile
+from .forms import UsersLoginForm, UsersProfileUpdateForm, UsersRegisterForm, UsersFollowersForm
+from .models import UsersProfile, UsersFollowers
 from django.contrib.auth.decorators import login_required
 from blog.models import BlogPosts
 
@@ -52,9 +52,23 @@ def users_logout(request):
 def users_profile(request, pk):
     profile_user = User.objects.filter(pk=pk).first()
     profile = UsersProfile.objects.filter(user=profile_user).first()
+    # sort followers and followed
+    followers = []
+    followed = []
+    follow_check = False
+    followers_query = UsersFollowers.objects.filter(followed=profile)
+    followed_query = UsersFollowers.objects.filter(follower=profile)
+    for instance in followed_query:
+        followed.append(instance.followed)
+    for instance in followers_query:
+        followers.append(instance.follower)
+    print(follow_check)
     context = {
         'profile': profile,
-        'posts': BlogPosts.objects.filter(profile=profile)
+        'posts': BlogPosts.objects.filter(profile=profile),
+        'followers': followers,
+        'followeds': followed,
+        'follow_form': UsersFollowersForm({'follower': request.user, 'followed': profile}),
         }
     return render(request, 'users/users_profile.html', context)
 
@@ -63,6 +77,9 @@ def users_profile(request, pk):
 def users_profile_update(request, pk):
     profile_user = User.objects.filter(pk=pk).first()
     profile = UsersProfile.objects.filter(user=profile_user).first()
+    # pra n edita perfil dos outros
+    if profile != request.user.profile:
+        return redirect('profile', profile.user.pk)
     if request.method == 'POST':
         form = UsersProfileUpdateForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
@@ -72,6 +89,6 @@ def users_profile_update(request, pk):
         form = UsersProfileUpdateForm(instance=profile)
     context = {
         'form': form,
-        'profile': profile
+        'profile': profile,
     }
     return render(request, 'users/users_profile_update.html', context)
