@@ -18,6 +18,7 @@ Header
     left: 0;
     box-sizing: border-box;
     border-bottom: 1px solid #dbdbdb;
+    z-index: 10
 }
 .blog-header-main-logo{
     height: 40px;
@@ -42,12 +43,6 @@ Header
     object-fit: contain;
     border-radius: 50%;
 }
-.blog-header-logout{
-    position: relative;
-    height: 23px;
-    width: 23px;
-    right: -175px;
-}   
 /*
 end Header
 */

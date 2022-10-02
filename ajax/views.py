@@ -10,7 +10,12 @@ def AjaxProfileFollow(request):
     if request.method == 'POST':
         form = UsersFollowersForm(request.POST)
         if form.is_valid():
-            instance = form.save()
+            follow_instance = UsersFollowers.objects.filter(follower=form.cleaned_data['follower'], 
+                                                            followed=form.cleaned_data['followed']).first()
+            if follow_instance: 
+                return JsonResponse({'error': 'follow instance exists'}, status=400)
+            else:
+                instance = form.save()
             # serializar é transforma info pra o ajax joga pro outro lado
             ser_instance = serializers.serialize('json', [instance,])
             return JsonResponse({"instance": ser_instance}, status=200)

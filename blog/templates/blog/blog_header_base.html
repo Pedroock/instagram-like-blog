@@ -46,9 +46,6 @@
             <a href="{% url 'profile' request.user.pk %}">
                 <img class="blog-header-pfp" src="{{ request.user.profile.pfp.url }}" alt="profile">
             </a>
-            <a href="{% url 'logout' %}">
-                <img class="blog-header-logout" src="{% static 'blog/logos/logo-logout.png' %}" alt="logout">
-            </a>
         </div>
     </header>
 

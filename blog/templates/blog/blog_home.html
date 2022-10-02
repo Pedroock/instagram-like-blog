@@ -4,6 +4,7 @@
 {% block css %}
     <link rel="stylesheet" href="{% static 'blog/blog_home.css' %}">
     <link rel="stylesheet" href="{% static 'blog/blog_home_create_form.css' %}">
+    <link rel="stylesheet" href="{% static 'blog/blog_home_homeside.css' %}">
 {% endblock css %}
 
 {% block content %}
@@ -75,3 +76,107 @@
         })
     </script>
 {% endblock form %}
+
+<!--
+    Aqui fica as sugestões de followers
+-->
+{% block homeside %}
+    <div class="blog-homeside">
+        <div class="blog-homeside-current-profile">
+            <a href="{% url 'profile' request.user.pk %}">
+                <img class="blog-homeside-current-profile-pfp" src="{{ request.user.profile.pfp.url }}" alt="pfp">
+            </a>
+            <div>
+                <a href="{% url 'profile' request.user.pk %}" class="blog-homeside-current-profile-username">{{ request.user.username }}</a>
+                <p class="blog-homeside-current-profile-name">{{ request.user.profile.name }}</p>
+            </div>
+            <a href="{% url 'logout' %}" class="blog-homeside-current-profile-logout">Logout</a>
+        </div>
+        <p class="blog-homeside-title">Suggestions for you... </p>
+        <div class="blog-homeside-suggestions">
+            {% for p_f_list in suggestions_list %}
+            <!-- 0- profile e 1- form -->
+                <div class="blog-homeside-suggestions-profile">
+                <div style="display: flex;justify-content: left;align-items: center;">
+                    <a href="{% url 'profile' p_f_list.0.user.pk %}">
+                        <img class="blog-homeside-suggestions-profile-pfp" src="{{ p_f_list.0.pfp.url }}" alt="pfp">
+                    </a>
+                    <div>
+                        <a href="{% url 'profile' p_f_list.0.user.pk %}" class="blog-homeside-suggestions-profile-username">{{ p_f_list.0.user.username }}</a>
+                        <p class="blog-homeside-suggestions-profile-name">{{ p_f_list.0.name }}</p>
+                    </div>
+                </div>    
+                    <form class="blog-homeside-follow-form" method="POST" enctype="multipart/form-data"> 
+                        {% csrf_token %}
+                        <div class="form-hide">
+                            {{ p_f_list.1 }}
+                        </div>  
+                        <button class="blog-homeside-suggestions-profile-follow" type="submit">Follow</button>
+                    </form>
+                    <form class="blog-homeside-unfollow-form" method="POST" enctype="multipart/form-data"> 
+                        {% csrf_token %}
+                        <div class="form-hide">
+                            {{ p_f_list.1 }}
+                        </div>  
+                        <button class="blog-homeside-suggestions-profile-unfollow" type="submit">Unfollow</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock homeside %}
+
+{% block ajax %}
+    <script>
+        $('.blog-homeside-follow-form').each(function(){
+            $(this).on('submit', function(e){
+                console.log('houve click')
+                // pelo visto essa parte do 'e' é pra n da reset na pag
+                e.preventDefault();
+                // serializar pra jogar pro url do app ajax
+                var serializeData = $(this).serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "profile-follow" %}',
+                    data: serializeData,
+                    context: $(this),
+                    success: function(response){
+                        let followForm = $(this)
+                        let unfollowForm = $(this).parent().find('.blog-homeside-unfollow-form')
+                        followForm.css({ display: "none" })
+                        unfollowForm.css({ display: "block" })
+                    },
+                    error: function(response){
+                        console.log('erro')
+                    }
+                });
+            })
+        })
+    </script>
+    <script>
+        $('.blog-homeside-unfollow-form').each(function(){
+            $(this).on('submit', function(e){
+                console.log('houve click')
+                // pelo visto essa parte do 'e' é pra n da reset na pag
+                e.preventDefault();
+                // serializar pra jogar pro url do app ajax
+                var serializeData = $(this).serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "profile-unfollow" %}',
+                    data: serializeData,
+                    context: $(this),
+                    success: function(response){
+                        let followForm = $(this).parent().find('.blog-homeside-follow-form')
+                        let unfollowForm = $(this)
+                        followForm.css({ display: "block" })
+                        unfollowForm.css({ display: "none" })
+                    },
+                    error: function(response){
+                        console.log('erro')
+                    }
+                });
+            })
+        })
+    </script>
+{% endblock ajax %}

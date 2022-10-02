@@ -1,0 +1,94 @@
+body{
+    display: flex;
+    justify-content: center;
+}
+.blog-homeside{
+    font-family: sans-serif;
+    margin-top: 80px;
+    margin-left: 25px;
+    width: 320px;
+}
+.blog-homeside-current-profile{
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.blog-homeside-current-profile-pfp{
+    height: 56px;
+    width: 56px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.blog-homeside-current-profile-username{
+    font-size: 14px;
+    color: #262626;
+    font-weight: bold;
+}
+.blog-homeside-current-profile-name{
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-top: 5px;
+}
+.blog-homeside-current-profile-logout{
+    color: #0095f6;
+    font-size: 12px;
+    font-weight: bold;
+    position: relative;
+    right: -150px;
+}
+/*
+    Sugestões
+*/
+.blog-homeside-title{
+    font-size: 14px;
+    color: #8e8e8e;
+    font-weight: bold;
+}
+.blog-homeside-suggestions{
+    margin-top: 15px;
+}.blog-homeside-suggestions-profile{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 320px;
+}
+.blog-homeside-suggestions-profile-pfp{
+    height: 32px;
+    width: 32px;
+    object-fit: contain;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.blog-homeside-suggestions-profile-username{
+    font-size: 14px;
+    color: #262626;
+    font-weight: bold;
+}
+.blog-homeside-suggestions-profile-name{
+    font-size: 14px;
+    color: #8e8e8e;
+    margin-top: 2px;
+}
+.blog-homeside-suggestions-profile-follow{
+    color: #0095f6;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #fafafa;
+    border: none;
+}.blog-homeside-suggestions-profile-follow:hover{
+    cursor: pointer;
+}
+.blog-homeside-suggestions-profile-unfollow{
+    color: #262626;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #fafafa;
+    border: none;
+}.blog-homeside-suggestions-profile-unfollow:hover{
+    cursor: pointer;
+}
+.form-hide, .blog-homeside-unfollow-form{
+    display: none;
+}
