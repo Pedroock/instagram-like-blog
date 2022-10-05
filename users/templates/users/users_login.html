@@ -15,7 +15,7 @@
             <img class="users-login-logo" src="{% static 'blog/logos/ig-text-logo.png' %}" alt="logo">
             {% csrf_token %}
             {{ form }}
-            <button class="users-login-submit" type="submit">Sign Ip</button>
+            <button class="users-login-submit" type="submit">Sign In</button>
             <p class="users-login-login">Don't have an account? 
                 <a class="users-login-link" href="{% url 'register' %}">Sign Up</a>
             </p>

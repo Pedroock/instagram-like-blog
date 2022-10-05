@@ -12,7 +12,17 @@
     <div class="blog-posts-content-section">
         <div class="blog-posts-section">
             {% for post_list in post_utils_list %}
-                <!--  0-posts_obj, 1-likeform, 2-like obj, 3-commentform, 4-comment obj, 5-commetfirst -->
+            <!--  0-posts_obj, 1-likeform, 2-like obj, 3-is_liked , 4-index, 
+                        5-commentform, 6-comment obj, 7-commetfirst
+            -->
+            <!--
+                Aqui eu quero deixar o post da lista e o post detalhado
+            -->
+            <div class="blog-post-wrapper-ajax-{{ post_list.4 }}">
+            <div class="blog-post-wrapper-{{ post_list.4 }}">
+                <!--
+                    post da lista
+                -->
                 <div class="blog-post">
                     <div class="blog-post-top">
                         <a href="{% url 'profile' post_list.0.profile.user.pk %}">
@@ -25,15 +35,44 @@
                     <img class="blog-post-content" src="{{ post_list.0.image.url }}" alt="post content">
                     <div class="blog-post-bottom">
                         <div class="blog-post-bottom-buttons">
-                            <button class="blog-post-like"> like</button>
-                            <button class="blog-post-comment">comment</button>
+                            <!--
+                                Aqui fica a form de like e o btn pra mostra o post detalhado
+                            -->
+                            {% if not post_list.3 %}
+                            <form class="post-like-form" method="POST" enctype="multipart/form-data"> 
+                                {% csrf_token %}
+                                <div class="form-hide">
+                                    {{ post_list.1 }}
+                                </div>  
+                                <button class="blog-post-like" name="like-post">
+                                    <img class="blog-post-like-img" src="{% static 'blog/logos/logo-like.png' %}" alt="like-btn">
+                                </button>
+                            </form>
+                            {% else %}
+                            <form class="post-unlike-form" method="POST" enctype="multipart/form-data"> 
+                                {% csrf_token %}
+                                <div class="form-hide">
+                                    {{ post_list.1 }}
+                                </div>  
+                                <button class="blog-post-unlike" name="unlike-post">
+                                    <img class="blog-post-like-img" src="{% static 'blog/logos/logo-like-red.png' %}" alt="like-btn">
+                                </button>
+                            </form>
+                            {% endif %}
+                            <!--
+                                acho q eu vou ter q adicionar uma maneira das classes de cada post serrem unicas para que eu possa diferenciar no ajax, a view do ajax já ta criada e eu acho q eu vou ter q mudar a lista de post para adicionar um index, e um check se o post já foi likado para mostrar o btn certo aqui
+                            -->
+                            <img class="blog-post-comment" src="{% static 'blog/logos/logo-coment.png' %}" alt="coment-btn">
+                            <!--
+                                acabo form e btn
+                            -->
                         </div>
-                        <h1 class="blog-post-bottom-likes">123 likes</h1>
+                        <h1 class="blog-post-bottom-likes">{{ post_list.2|length }} likes</h1>
                         <div class="blog-post-bottom-desc-comment">
                             <h1 class="blog-post-bottom-desc-comment-username">{{ post_list.0.profile.user.username }}</h1>
                             <p class="blog-post-bottom-desc-comment-content">{{ post_list.0.desc }}</p>
                         </div>
-                        <p class="blog-post-bottom-comment-count">see all todos commens</p>
+                        <p class="blog-post-bottom-comment-count">See all commens</p>
                         <div class="blog-post-bottom-desc-comment">
                             <h1 class="blog-post-bottom-desc-comment-username">nome</h1>
                             <p class="blog-post-bottom-desc-comment-content">desc</p>
@@ -42,40 +81,21 @@
                         <p class="form-placeholdr">form placeholder</p>
                     </div>
                 </div>
+                <!--
+                    Aqui começa o post detalhado
+                -->
+                <div class="blog-post-detail">
+
+                </div>
+                
+            </div>
+            </div>
             {% endfor %}
         </div>
     </div>
     <!-- end Post template -->
 {% endblock content %}
 
-{% block form %}
-    <div class="home-create-form-background">
-        <div class="home-create-form">
-            <h1 class="home-create-form-title">Create a post</h1>
-            <img class="home-create-form-image" src="{% static 'blog/logos/logo-upload2.png' %}" alt="upload">
-            <h1 class="home-create-form-button-fake">Select an image</h1>
-            {{ form.image }}
-            {{ form.desc }}
-            <button class="home-create-form-submit">Post</button>
-        </div>
-        <p class="home-create-close-button">+</p>
-    </div>
-
-    <script>
-        const uploadButton = document.querySelector('.header-upload-button')
-        uploadButton.addEventListener('click', function(e){
-            e.preventDefault()   // pra n dar reload na pag
-            let popUpBackground = document.querySelector('.home-create-form-background')
-            popUpBackground.style.display = 'flex'
-        })
-        
-        const uploadCloseButton = document.querySelector('.home-create-close-button')
-        uploadCloseButton.addEventListener('click', function(){
-            let popUpBackground = document.querySelector('.home-create-form-background')
-            popUpBackground.style.display = 'none'
-        })
-    </script>
-{% endblock form %}
 
 <!--
     Aqui fica as sugestões de followers
@@ -126,7 +146,42 @@
     </div>
 {% endblock homeside %}
 
+
+{% block form %}
+    <div class="home-create-form-background">
+        <div class="home-create-form">
+            <h1 class="home-create-form-title">Create a post</h1>
+            <img class="home-create-form-image" src="{% static 'blog/logos/logo-upload2.png' %}" alt="upload">
+            <h1 class="home-create-form-button-fake">Select an image</h1>
+            {{ form.image }}
+            {{ form.desc }}
+            <button class="home-create-form-submit" name="post-post">Post</button>
+        </div>
+        <p class="home-create-close-button">+</p>
+    </div>
+
+    <script>
+        const uploadButton = document.querySelector('.header-upload-button')
+        uploadButton.addEventListener('click', function(e){
+            e.preventDefault()   // pra n dar reload na pag
+            let popUpBackground = document.querySelector('.home-create-form-background')
+            popUpBackground.style.display = 'flex'
+        })
+        
+        const uploadCloseButton = document.querySelector('.home-create-close-button')
+        uploadCloseButton.addEventListener('click', function(){
+            let popUpBackground = document.querySelector('.home-create-form-background')
+            popUpBackground.style.display = 'none'
+        })
+    </script>
+{% endblock form %}
+
+
+
 {% block ajax %}
+    <!--
+        Ajax para os followers
+    -->
     <script>
         $('.blog-homeside-follow-form').each(function(){
             $(this).on('submit', function(e){
@@ -179,4 +234,72 @@
             })
         })
     </script>
+    <!--
+        Ajax para like
+    -->
+    <script>
+        var funcLike = function(thisx){
+            thisx.on('submit', function(e){
+                console.log('houve click')
+                // pelo visto essa parte do 'e' é pra n da reset na pag
+                e.preventDefault();
+                // serializar pra jogar pro url do app ajax
+                var serializeData = thisx.serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "post-like" %}',
+                    data: serializeData,
+                    context: thisx,
+                    success: function(response){
+                        let wrapperAjaxDOM = $(this).parents().eq(4)
+                        let wrapperAjax = '.' + $(this).parents().eq(4).attr('class')
+                        let wrapper = '.' + $(this).parents().eq(3).attr('class')
+                        $(wrapperAjax).load("{% url 'home' %}" + ' ' + wrapper, function(){
+                            funcUnlike(wrapperAjaxDOM.find('.post-unlike-form'))
+                        })
+                    },
+                    error: function(response){
+                        console.log('erro')
+                    }
+                });
+            })
+        }
+        var funcUnlike = function(thisy){
+            thisy.on('submit', function(e){
+                console.log('houve click')
+                // pelo visto essa parte do 'e' é pra n da reset na pag
+                e.preventDefault();
+                // serializar pra jogar pro url do app ajax
+                var serializeData = thisy.serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "post-unlike" %}',
+                    data: serializeData,
+                    context: thisy,
+                    success: function(response){
+                        let wrapperAjaxDOM = $(this).parents().eq(4)
+                        let wrapperAjax = '.' + $(this).parents().eq(4).attr('class')
+                        let wrapper = '.' + $(this).parents().eq(3).attr('class')
+                        $(wrapperAjax).load("{% url 'home' %}" + ' ' + wrapper, function(){
+                            funcLike(wrapperAjaxDOM.find('.post-like-form'))
+                        })
+                    },
+                    error: function(response){
+                        console.log('erro')
+                    }
+                });
+            })
+        }
+
+
+        $('.post-like-form').each(function(){
+            funcLike($(this))
+        })
+        $('.post-unlike-form').each(function(){
+            funcUnlike($(this))
+        })
+    </script>
+    <!--
+        A solução foi incrivelmente simples, só selecionar o wrapper do post q foi reloadado e selecionar o filho q vc quer, o problema q eu tava tendo foi q eu tava selecionando td isso fora do callback da load e é necessário fazer isso no .load(). Fica meio confuso de ler porque ta referenciando as funções entre si, mas jpa q js é async funciona legal. Gostei bem dessa parte, mas n vai ter jeito, vou ter que refatorar saporra pq ta um inferno ficar rodando por 300linhas de cógido toda hora.
+    -->
 {% endblock ajax %}

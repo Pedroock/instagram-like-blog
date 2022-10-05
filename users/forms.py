@@ -70,6 +70,7 @@ class UsersLoginForm(forms.ModelForm):
         if '@' in new_username_or_email:
             # its a email
             new_user = authenticate(email=new_username_or_email, password=new_password)
+            print(new_user, '///////email')
             if new_user is not None:
                 return self.cleaned_data
             else: 
@@ -77,6 +78,7 @@ class UsersLoginForm(forms.ModelForm):
         else: 
             # its not a email
             new_user = authenticate(username=new_username_or_email, password=new_password)
+            print(new_user, '///////username')
             if new_user is not None:
                 return self.cleaned_data
             else: 

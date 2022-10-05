@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from users.models import UsersFollowers, UsersProfile
 from users.forms import UsersFollowersForm
-from blog.models import BlogPosts
-from .forms import BlogCreatePost
+from blog.models import BlogPosts, BlogPostsLikes
+from .forms import BlogCreatePost, BlogPostsLikesForm
 from random import sample
 
 # Create your views here.
@@ -45,7 +45,8 @@ def blog_home(request):
     # ta meio confuso, mas da pra entender
     '''
     Sort posts and put them in a list
-    >>>post_list = [] # -> 0-posts_obj, 1-likeform, 2-like obj, 3-commentform, 4-comment obj, 5-commetfirst
+    >>>post_list = [] # -> 0-posts_obj, 1-likeform, 2-like obj, 3-is_liked , 4-index
+                            5-commentform, 6-comment obj, 7-commetfirst
     For each post there will have a like form and obj, comment form and obj for each post 
     post_utils_list = [
         [post_obj, like_form, ...],
@@ -55,27 +56,39 @@ def blog_home(request):
     '''
     post_utils_list = []
     # First 20 newest posts
-    post_obj = BlogPosts.objects.filter(profile__in=followed_profiles_list)[:20]
+    post_objs = BlogPosts.objects.filter(profile__in=followed_profiles_list)[:20]
     # create the post-specific list
-    for post_obj in post_obj:
+    post_index = 0
+    for post_obj in reversed(post_objs):
         post_list = []
+        post_index += 1
         post_author_profile = post_obj.profile
         # aqui fica o resto qnd eu fizer os models com like e comment
+        like_form = BlogPostsLikesForm({'profile': request.user.profile, 'post': post_obj})
+        like_obj = BlogPostsLikes.objects.filter(post=post_obj)
+        if BlogPostsLikes.objects.filter(post=post_obj, profile=request.user.profile).first():
+            is_liked = True
+        else:
+            is_liked = False
+        
         post_list.append(post_obj)
-
+        post_list.append(like_form)
+        post_list.append(like_obj)
+        post_list.append(is_liked)
+        post_list.append(post_index)
         # append post list to post utils list
         post_utils_list.append(post_list)
-
-
-
     '''
-    Create Post Form Part
+    Create Post Form Part and like and comment form
     '''
     if request.method == 'POST':
-        form = BlogCreatePost(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect('home')
+        if 'post-post' in request.POST:
+            form = BlogCreatePost(request.POST, request.FILES)
+            if form.is_valid():
+                form.save()
+                return redirect('home')
+            else:
+                form = BlogCreatePost({'profile': request.user.profile})
     else:
         form = BlogCreatePost({'profile': request.user.profile})
     '''

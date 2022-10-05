@@ -173,4 +173,9 @@ Coloquei condição nos btns, se o request.user.profile in followers ai esconde 
 Hoje tava meio duro de tempo, então a parte sugestão de followers eu faço amanhã(hj né oq já é 0:35) e começo a parte dos like/comment.
 
 
-DIA 6-
+DIA 6/7- Criei o sistema de sugestão usando a biblioteca RANDOM do python. 
+
+DIA 8- DESCOBRI UM ERRO BRUTAL NO CÓDIGO, bem a form q eu fiz foi usando password1 e 2, mas nenhuma password normal, então quando eram salvos os user, não tinham senhas e por isso n era possivel achar eles pelo authenticate(), a solução é na view salvar o modelo e guardar o return numa var e mudar a senha e salvar denovo.
+>>> user = form.save()
+    user.set_password(form.cleaned_data['password1'])
+    user.save()
