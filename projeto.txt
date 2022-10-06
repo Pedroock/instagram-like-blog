@@ -1,7 +1,7 @@
 O PROJETO É FAZER UM SITE IGUAL O INSTAGRAM, E AQUI EU QUERO FAZER TIPO UM ROADMAP.
-O BASICO VAI SER CRIAR O SISTEMA LOGIN, VAMO DAR UMA OLHADA NAS DOC DO MODEL USER NO DJANGO E VAMOS CRIAR TAMBÉM O SIGNAL DO PROFILE PRA OS DOIS VIR JUNTOS, VAMOS CRIAR O BÁSICO E DPS ADICIONAR ALGO CASO SEJA NECESSARIO.
-VAMOS CRIAR UM SISTEMA DE POSTS, QUE VAI TER A DESCRIÇÃO E UMA FOTO E UM CRIADOR. E VAMOS FAZER AS FORMS PARA CRIAR O POST.
-VAMOS FAZER O ESQUEMA DE SEGUIDORES E VAMOS USAR AJAX PARA FAZER O SITE RESPONDER VISUALMENTE AO CLICK.
+O BASICO VAI SER CRIAR O SISTEMA LOGIN, VAMO DAR UMA OLHADA NAS DOC DO MODEL USER NO DJANGO E VAMOS CRIAR TAMBÉM O SIGNAL DO PROFILE PRA OS DOIS VIR JUNTOS, VAMOS CRIAR O BÁSICO E DPS ADICIONAR ALGO CASO SEJA NECESSARIO.   >>>FEITO<<<
+VAMOS CRIAR UM SISTEMA DE POSTS, QUE VAI TER A DESCRIÇÃO E UMA FOTO E UM CRIADOR. E VAMOS FAZER AS FORMS PARA CRIAR O POST.   >>>FEITO<<<
+VAMOS FAZER O ESQUEMA DE SEGUIDORES E VAMOS USAR AJAX PARA FAZER O SITE RESPONDER VISUALMENTE AO CLICK.   >>>FEITO<<<
 VAMOS CRIAR LIKES E COMMENTS PARA POSTS USANDO AJAX PARA FAZER O SITE RESPONDER VISUALMENTE AO CLICK.
 VAMOS CRIAR O SISTEMA DE CHAT USANDO O CHANNELS, EU QUERO Q AS MENSAGENS SEJAM MANDADAS PARA UMA DATABASE.
 O SISTEMA DO DISCOVERY VAI SER FEITO USANDO MEIO Q UM RANDOM USANDO PESOS, NO CASO SERIA ATRAVÉS DE HASHTAGS, SEGUIDORES E LIKES. 
@@ -179,3 +179,80 @@ DIA 8- DESCOBRI UM ERRO BRUTAL NO CÓDIGO, bem a form q eu fiz foi usando passwo
 >>> user = form.save()
     user.set_password(form.cleaned_data['password1'])
     user.save()
+
+DIA 9- Criei os modelos simples de like que recebe user e o post, atualizei a postlist para 
+post_list = [] # -> 0-posts_obj, 1-likeform, 2-like obj, 3-is_liked , 4-index 5-commentform, 6-comment obj, 7-commetfirst
+foi adicionado o is_liked e o index, index é só usado pra diferenciar o wrapper do post e o is_liked é usado pra mostrar qual das duas forms vai ser rendenizada e eu adicionei as forms simples no post. 
+AGORA UMA PARTE INTERESSANTE eu tive a ideia de englobar tudo que tange ao post dentro de um wrapper, isso inclui o proprio post normal q aparece na home com as forms de like e comment, os popup mostrandos os users que deram like e a superpopup do post quando você clica nele. Minha preocupação é que isso tudo vai estar num wrapper q vai estar dentro de um ajaxwrapper e quando o ajax for dar load nessa porra toda, pode ficar bem lerdo.
+Agora sobre o codigo por tras do botão de like, primeiro de volta na ajax.views eu coloquei uma função simples de criar instancia de like e uma de remover.
+Na parte do template eu coloquei o código:
+<script>
+        var funcLike = function(thisx){
+            thisx.on('submit', function(e){
+                console.log('houve click')
+                // pelo visto essa parte do 'e' é pra n da reset na pag
+                e.preventDefault();
+                // serializar pra jogar pro url do app ajax
+                var serializeData = thisx.serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "post-like" %}',
+                    data: serializeData,
+                    context: thisx,
+                    success: function(response){
+                        let wrapperAjaxDOM = $(this).parents().eq(4)
+                        let wrapperAjax = '.' + $(this).parents().eq(4).attr('class')
+                        let wrapper = '.' + $(this).parents().eq(3).attr('class')
+                        $(wrapperAjax).load("{% url 'home' %}" + ' ' + wrapper, function(){
+                            funcUnlike(wrapperAjaxDOM.find('.post-unlike-form'))
+                        })
+                    },
+                    error: function(response){
+                        console.log('erro')
+                    }
+                });
+            })
+        }
+        var funcUnlike = function(thisy){
+            thisy.on('submit', function(e){
+                console.log('houve click')
+                // pelo visto essa parte do 'e' é pra n da reset na pag
+                e.preventDefault();
+                // serializar pra jogar pro url do app ajax
+                var serializeData = thisy.serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "post-unlike" %}',
+                    data: serializeData,
+                    context: thisy,
+                    success: function(response){
+                        let wrapperAjaxDOM = $(this).parents().eq(4)
+                        let wrapperAjax = '.' + $(this).parents().eq(4).attr('class')
+                        let wrapper = '.' + $(this).parents().eq(3).attr('class')
+                        $(wrapperAjax).load("{% url 'home' %}" + ' ' + wrapper, function(){
+                            funcLike(wrapperAjaxDOM.find('.post-like-form'))
+                        })
+                    },
+                    error: function(response){
+                        console.log('erro')
+                    }
+                });
+            })
+        }
+
+
+        $('.post-like-form').each(function(){
+            funcLike($(this))
+        })
+        $('.post-unlike-form').each(function(){
+            funcUnlike($(this))
+        })
+    </script>
+    <!--
+        A solução foi incrivelmente simples, só selecionar o wrapper do post q foi reloadado e selecionar o filho q vc quer, o problema q eu tava tendo foi q eu tava selecionando td isso fora do callback da load e é necessário fazer isso no .load(). Fica meio confuso de ler porque ta referenciando as funções entre si, mas jpa q js é async funciona legal. Gostei bem dessa parte, mas n vai ter jeito, vou ter que refatorar saporra pq ta um inferno ficar rodando por 300linhas de cógido toda hora.
+    -->
+copiei tmb a explicação q eu coloquei, pode ser útil no futuro. Aqui eu fiz o ajax um pouco diferente, eu crie ele como eu faria antes dentro do .each(), mas depois eu fiz diferente, eu separei a função numa var que recebe o objeto jquery e usa o .on() nele e continua normalmente aí eu depois só chamo essa função, mas agora olhando eu vejo q eu posso deixar o .on() fora da função para deixar ela mais pura ainda, mas vou ver isso amanhã q é o dia do código refatorado. 
+Ah e eu separei o ajax em funções pq é pra elas se chamarem entre si, como vc pode ver a funcLike tem funcUnlike dentro dela e a funcUnlike tem funcLike dentro dela, achei estranho essa relação simbiótica, mas ta funcionando e boa.
+COISAS PARA VER AMANHÃ: QUERIA DIVIDIR O TEMPLATE EM MAIS PARTES, CRIAR UM METHODS.PY PARA DEIXAR O TRABALHO MAIS PESADO DAS VIEWS DENTRO DE LÁ E REFAZER OS AJAX COM FUNÇÕES, GOSTEI DISSO.
+
+

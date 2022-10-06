@@ -1,6 +1,10 @@
 {% extends 'blog/blog_header_base.html' %}
 {% load static %}
 
+{% block title %}
+    {{ profile.user.username }}'s profile
+{% endblock title %}
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'users/users_profile.css' %}">
     <link rel="stylesheet" href="{% static 'users/users_profile_popup.css' %}">
@@ -34,9 +38,6 @@
                             </div>  
                             <button type="submit" class="users-profile-header-info-unfollow">Unfollow</button>
                         </form>
-                        <!--
-                            condiiconal para qual btn aparece
-                        -->
                         {% if request.user.profile in followers %}
                             <script>
                                 document.querySelector('.users-profile-header-info-follow').style.display = 'none'
@@ -45,13 +46,10 @@
                             <script>
                                 document.querySelector('.users-profile-header-info-unfollow').style.display = 'none'
                             </script>
-                        {% endif %}
-                    <!-- end Follow and Unfollow forms --> 
+                        {% endif %} 
                 {% endif %}
             </div>
-            <!--
-                Aqui é a parte que vai ser reloadada no click do ajax
-            -->
+            <!--  Part that will be reloaded  -->
             <div class="users-profile-header-info-numbers-wrapper">
                 <div class="users-profile-header-info-numbers">
                     <h1 class="publi-number"><p>{{ posts|length }}</p> posts</h1>
@@ -59,9 +57,7 @@
                     <h1 class="followed-number"><p>{{ followeds|length }}</p> follwing</h1>
                 </div>
             </div>
-            <!--
-                Aqui acaba a parte que vai ser reloadada no click do ajax
-            -->
+            <!--  End part that will be reloaded  -->
             <h1 class="users-profile-header-info-name">{{ profile.name }}</h1>
             <p class="users-profile-header-info-bio">{{ profile.bio }}</p>
         </div>
@@ -75,9 +71,6 @@
 
 
 {% block popup %}
-<!--
-    Aqui nas popup do follower vai sempre ter uma peculiaridade, o
--->
 <div class="users-profile-followers-popup-background-wrapper">
     <div class="users-profile-followers-popup-background">
         <div class="users-profile-follower-popup">
@@ -147,10 +140,7 @@
 {% block ajax %}
     <script>
         $('.users-profile-follow-form').on('submit', function(e){
-            console.log('houve click')
-            // pelo visto essa parte do 'e' é pra n da reset na pag
             e.preventDefault();
-            // serializar pra jogar pro url do app ajax
             var serializeData = $(this).serialize();
             $.ajax({
                 type:'POST',
@@ -162,14 +152,13 @@
                         let unfollowBtn = document.querySelector('.users-profile-header-info-unfollow')
                         followBtn.style.display = 'none'
                         unfollowBtn.style.display = 'inline-block'
-                        // add click on follower popups and reload popup
                         $('.users-profile-followers-popup-background-wrapper').load("{% url 'profile' profile.user.pk %} .users-profile-followers-popup-background ")
                         addFollowedPopup()
                         addFollowerPopup()
                     });
                 },
                 error: function(response){
-                    console.log('erro')
+                    console.log('ERROR')
                 }
             });
         })
@@ -177,10 +166,7 @@
 
     <script>
         $('.users-profile-unfollow-form').on('submit', function(e){
-            console.log('houve click')
-            // pelo visto essa parte do 'e' é pra n da reset na pag
             e.preventDefault();
-            // serializar pra jogar pro url do app ajax
             var serializeData = $(this).serialize();
             $.ajax({
                 type:'POST',
@@ -199,7 +185,7 @@
                     });
                 },
                 error: function(response){
-                    console.log('erro')
+                    console.log('ERROR')
                 }
             });
         })

@@ -54,7 +54,6 @@ def users_logout(request):
 def users_profile(request, pk):
     profile_user = User.objects.filter(pk=pk).first()
     profile = UsersProfile.objects.filter(user=profile_user).first()
-    # sort followers and followed
     followers = []
     followed = []
     follow_check = False
@@ -79,7 +78,6 @@ def users_profile(request, pk):
 def users_profile_update(request, pk):
     profile_user = User.objects.filter(pk=pk).first()
     profile = UsersProfile.objects.filter(user=profile_user).first()
-    # pra n edita perfil dos outros
     if profile != request.user.profile:
         return redirect('profile', profile.user.pk)
     if request.method == 'POST':

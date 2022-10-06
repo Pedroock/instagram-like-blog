@@ -1,6 +1,10 @@
 {% extends 'blog/blog_header_base.html' %}
 {% load static %}
 
+{% block title %}
+    {{ profile.user.username }}'s profile
+{% endblock title %}
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'users/users_profile_update.css' %}">
 {% endblock css %}

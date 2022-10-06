@@ -1,48 +1,52 @@
 {% extends 'blog/blog_header_base.html' %}
 {% load static %}
 
+
+
+{% block title %}
+    Home
+{% endblock title %}
+
+
+
 {% block css %}
     <link rel="stylesheet" href="{% static 'blog/blog_home.css' %}">
     <link rel="stylesheet" href="{% static 'blog/blog_home_create_form.css' %}">
     <link rel="stylesheet" href="{% static 'blog/blog_home_homeside.css' %}">
 {% endblock css %}
 
+
+
 {% block content %}
-    <!-- Post template -->
+    <!-- Post template wrappers here there will be the post, the detail post and the post popups -->
     <div class="blog-posts-content-section">
         <div class="blog-posts-section">
-            {% for post_list in post_utils_list %}
-            <!--  0-posts_obj, 1-likeform, 2-like obj, 3-is_liked , 4-index, 
-                        5-commentform, 6-comment obj, 7-commetfirst
-            -->
-            <!--
-                Aqui eu quero deixar o post da lista e o post detalhado
-            -->
-            <div class="blog-post-wrapper-ajax-{{ post_list.4 }}">
-            <div class="blog-post-wrapper-{{ post_list.4 }}">
-                <!--
-                    post da lista
-                -->
+            {% for post_dict in post_utils_list %}
+            <!--  {  'post_obj': post_obj, 'like_form': like_form, 'like_obj': like_obj, 'is_liked': True, 
+                     'comment_form': comment_form, 'comment_obj': comment_obj, 'comment_first': comment_first,
+                     'post_index': post_index,    }   -->
+            <!--  Aqui eu quero deixar o post da lista e o post detalhado  -->
+            <div class="blog-post-wrapper-ajax-{{ post_dict.post_index }}">
+            <div class="blog-post-wrapper-{{ post_dict.post_index }}">
+                <!--  Regular post section  -->
                 <div class="blog-post">
                     <div class="blog-post-top">
-                        <a href="{% url 'profile' post_list.0.profile.user.pk %}">
-                            <img class="blog-post-top-pfp" src="{{ post_list.0.profile.pfp.url }}" alt="pfp">
+                        <a href="{% url 'profile' post_dict.post_obj.profile.user.pk %}">
+                            <img class="blog-post-top-pfp" src="{{ post_dict.post_obj.profile.pfp.url }}" alt="pfp">
                         </a>
-                        <a href="{% url 'profile' post_list.0.profile.user.pk %}">
-                            <h1 class="blog-post-top-username">{{ post_list.0.profile.user.username }}</h1>
+                        <a href="{% url 'profile' post_dict.post_obj.profile.user.pk %}">
+                            <h1 class="blog-post-top-username">{{ post_dict.post_obj.profile.user.username }}</h1>
                         </a>
                     </div>
-                    <img class="blog-post-content" src="{{ post_list.0.image.url }}" alt="post content">
+                    <img class="blog-post-content" src="{{ post_dict.post_obj.image.url }}" alt="post content">
                     <div class="blog-post-bottom">
                         <div class="blog-post-bottom-buttons">
-                            <!--
-                                Aqui fica a form de like e o btn pra mostra o post detalhado
-                            -->
-                            {% if not post_list.3 %}
+                            <!--  Like forms  -->
+                            {% if not post_dict.is_liked %}
                             <form class="post-like-form" method="POST" enctype="multipart/form-data"> 
                                 {% csrf_token %}
                                 <div class="form-hide">
-                                    {{ post_list.1 }}
+                                    {{ post_dict.like_form }}
                                 </div>  
                                 <button class="blog-post-like" name="like-post">
                                     <img class="blog-post-like-img" src="{% static 'blog/logos/logo-like.png' %}" alt="like-btn">
@@ -52,56 +56,50 @@
                             <form class="post-unlike-form" method="POST" enctype="multipart/form-data"> 
                                 {% csrf_token %}
                                 <div class="form-hide">
-                                    {{ post_list.1 }}
+                                    {{ post_dict.like_form }}
                                 </div>  
                                 <button class="blog-post-unlike" name="unlike-post">
                                     <img class="blog-post-like-img" src="{% static 'blog/logos/logo-like-red.png' %}" alt="like-btn">
                                 </button>
                             </form>
                             {% endif %}
-                            <!--
-                                acho q eu vou ter q adicionar uma maneira das classes de cada post serrem unicas para que eu possa diferenciar no ajax, a view do ajax já ta criada e eu acho q eu vou ter q mudar a lista de post para adicionar um index, e um check se o post já foi likado para mostrar o btn certo aqui
-                            -->
                             <img class="blog-post-comment" src="{% static 'blog/logos/logo-coment.png' %}" alt="coment-btn">
-                            <!--
-                                acabo form e btn
-                            -->
                         </div>
-                        <h1 class="blog-post-bottom-likes">{{ post_list.2|length }} likes</h1>
+                        <h1 class="blog-post-bottom-likes">{{ post_dict.like_obj|length }} likes</h1>
                         <div class="blog-post-bottom-desc-comment">
-                            <h1 class="blog-post-bottom-desc-comment-username">{{ post_list.0.profile.user.username }}</h1>
-                            <p class="blog-post-bottom-desc-comment-content">{{ post_list.0.desc }}</p>
+                            <h1 class="blog-post-bottom-desc-comment-username">{{ post_dict.post_obj.profile.user.username }}</h1>
+                            <p class="blog-post-bottom-desc-comment-content">{{ post_dict.post_obj.desc }}</p>
                         </div>
                         <p class="blog-post-bottom-comment-count">See all commens</p>
                         <div class="blog-post-bottom-desc-comment">
                             <h1 class="blog-post-bottom-desc-comment-username">nome</h1>
                             <p class="blog-post-bottom-desc-comment-content">desc</p>
                         </div>
-                        <h1 class="post-bottom-date">{{ post_list.0.date }}</h1>
+                        <h1 class="post-bottom-date">{{ post_dict.post_obj.date }}</h1>
                         <p class="form-placeholdr">form placeholder</p>
                     </div>
                 </div>
-                <!--
-                    Aqui começa o post detalhado
-                -->
+                <!--  Post Details  -->
                 <div class="blog-post-detail">
 
                 </div>
-                
+                <!--  Post like popup  -->
+                <div class="blog-post-like-popup">
+                    
+                </div>
             </div>
             </div>
             {% endfor %}
         </div>
     </div>
-    <!-- end Post template -->
+    <!-- end Post template wrapper -->
 {% endblock content %}
 
 
-<!--
-    Aqui fica as sugestões de followers
--->
+
 {% block homeside %}
     <div class="blog-homeside">
+        <!--  Current profile  -->
         <div class="blog-homeside-current-profile">
             <a href="{% url 'profile' request.user.pk %}">
                 <img class="blog-homeside-current-profile-pfp" src="{{ request.user.profile.pfp.url }}" alt="pfp">
@@ -114,29 +112,30 @@
         </div>
         <p class="blog-homeside-title">Suggestions for you... </p>
         <div class="blog-homeside-suggestions">
-            {% for p_f_list in suggestions_list %}
-            <!-- 0- profile e 1- form -->
+            {% for p_f_dict in suggestions_list %}
+            <!--  {'profile': profile, 'form': form}  -->
                 <div class="blog-homeside-suggestions-profile">
                 <div style="display: flex;justify-content: left;align-items: center;">
-                    <a href="{% url 'profile' p_f_list.0.user.pk %}">
-                        <img class="blog-homeside-suggestions-profile-pfp" src="{{ p_f_list.0.pfp.url }}" alt="pfp">
+                    <a href="{% url 'profile' p_f_dict.profile.user.pk %}">
+                        <img class="blog-homeside-suggestions-profile-pfp" src="{{ p_f_dict.profile.pfp.url }}" alt="pfp">
                     </a>
                     <div>
-                        <a href="{% url 'profile' p_f_list.0.user.pk %}" class="blog-homeside-suggestions-profile-username">{{ p_f_list.0.user.username }}</a>
-                        <p class="blog-homeside-suggestions-profile-name">{{ p_f_list.0.name }}</p>
+                        <a href="{% url 'profile' p_f_dict.profile.user.pk %}" class="blog-homeside-suggestions-profile-username">{{ p_f_dict.profile.user.username }}</a>
+                        <p class="blog-homeside-suggestions-profile-name">{{ p_f_dict.profile.name }}</p>
                     </div>
                 </div>    
+                    <!--  Follow and unfollow forms  -->
                     <form class="blog-homeside-follow-form" method="POST" enctype="multipart/form-data"> 
                         {% csrf_token %}
                         <div class="form-hide">
-                            {{ p_f_list.1 }}
+                            {{ p_f_dict.form }}
                         </div>  
                         <button class="blog-homeside-suggestions-profile-follow" type="submit">Follow</button>
                     </form>
                     <form class="blog-homeside-unfollow-form" method="POST" enctype="multipart/form-data"> 
                         {% csrf_token %}
                         <div class="form-hide">
-                            {{ p_f_list.1 }}
+                            {{ p_f_dict.form }}
                         </div>  
                         <button class="blog-homeside-suggestions-profile-unfollow" type="submit">Unfollow</button>
                     </form>
@@ -145,6 +144,7 @@
         </div>
     </div>
 {% endblock homeside %}
+
 
 
 {% block form %}
@@ -159,15 +159,13 @@
         </div>
         <p class="home-create-close-button">+</p>
     </div>
-
     <script>
         const uploadButton = document.querySelector('.header-upload-button')
         uploadButton.addEventListener('click', function(e){
-            e.preventDefault()   // pra n dar reload na pag
+            e.preventDefault() 
             let popUpBackground = document.querySelector('.home-create-form-background')
             popUpBackground.style.display = 'flex'
         })
-        
         const uploadCloseButton = document.querySelector('.home-create-close-button')
         uploadCloseButton.addEventListener('click', function(){
             let popUpBackground = document.querySelector('.home-create-form-background')
@@ -179,16 +177,11 @@
 
 
 {% block ajax %}
-    <!--
-        Ajax para os followers
-    -->
     <script>
+        // add follow function on homeside
         $('.blog-homeside-follow-form').each(function(){
             $(this).on('submit', function(e){
-                console.log('houve click')
-                // pelo visto essa parte do 'e' é pra n da reset na pag
                 e.preventDefault();
-                // serializar pra jogar pro url do app ajax
                 var serializeData = $(this).serialize();
                 $.ajax({
                     type:'POST',
@@ -202,19 +195,15 @@
                         unfollowForm.css({ display: "block" })
                     },
                     error: function(response){
-                        console.log('erro')
+                        console.log('ERROR')
                     }
                 });
             })
         })
-    </script>
-    <script>
+        // add unfollow function on homeside
         $('.blog-homeside-unfollow-form').each(function(){
             $(this).on('submit', function(e){
-                console.log('houve click')
-                // pelo visto essa parte do 'e' é pra n da reset na pag
                 e.preventDefault();
-                // serializar pra jogar pro url do app ajax
                 var serializeData = $(this).serialize();
                 $.ajax({
                     type:'POST',
@@ -228,22 +217,17 @@
                         unfollowForm.css({ display: "none" })
                     },
                     error: function(response){
-                        console.log('erro')
+                        console.log('ERROR')
                     }
                 });
             })
         })
     </script>
-    <!--
-        Ajax para like
-    -->
     <script>
+        // Creates like and unlike functions, referencing each other
         var funcLike = function(thisx){
             thisx.on('submit', function(e){
-                console.log('houve click')
-                // pelo visto essa parte do 'e' é pra n da reset na pag
                 e.preventDefault();
-                // serializar pra jogar pro url do app ajax
                 var serializeData = thisx.serialize();
                 $.ajax({
                     type:'POST',
@@ -259,17 +243,14 @@
                         })
                     },
                     error: function(response){
-                        console.log('erro')
+                        console.log('ERROR')
                     }
                 });
             })
         }
         var funcUnlike = function(thisy){
             thisy.on('submit', function(e){
-                console.log('houve click')
-                // pelo visto essa parte do 'e' é pra n da reset na pag
                 e.preventDefault();
-                // serializar pra jogar pro url do app ajax
                 var serializeData = thisy.serialize();
                 $.ajax({
                     type:'POST',
@@ -285,13 +266,12 @@
                         })
                     },
                     error: function(response){
-                        console.log('erro')
+                        console.log('ERROR')
                     }
                 });
             })
         }
-
-
+        // Adds like and unlike functions initially
         $('.post-like-form').each(function(){
             funcLike($(this))
         })
@@ -299,7 +279,4 @@
             funcUnlike($(this))
         })
     </script>
-    <!--
-        A solução foi incrivelmente simples, só selecionar o wrapper do post q foi reloadado e selecionar o filho q vc quer, o problema q eu tava tendo foi q eu tava selecionando td isso fora do callback da load e é necessário fazer isso no .load(). Fica meio confuso de ler porque ta referenciando as funções entre si, mas jpa q js é async funciona legal. Gostei bem dessa parte, mas n vai ter jeito, vou ter que refatorar saporra pq ta um inferno ficar rodando por 300linhas de cógido toda hora.
-    -->
 {% endblock ajax %}
