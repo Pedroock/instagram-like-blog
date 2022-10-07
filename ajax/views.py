@@ -1,7 +1,6 @@
-import profile
 from django.shortcuts import render
-from blog.forms import BlogPostsLikesForm
-from blog.models import BlogPostsLikes
+from blog.forms import BlogPostsLikesForm, BlogPostsCommentsForm
+from blog.models import BlogPostsLikes, BlogPostsComments
 from users.forms import UsersFollowersForm
 from django.http import JsonResponse
 from django.core import serializers
@@ -86,3 +85,16 @@ def AjaxPostUnlike(request):
     else:
         return JsonResponse({'status': 'error'}, status=400)
         # 200 deu certo, 400 deu nn
+
+
+@csrf_exempt
+def AjaxPostComment(request):
+    if request.method == 'POST':
+        form = BlogPostsCommentsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'status': 'foi'}, status=200)
+        else:
+            JsonResponse({'status': 'error'}, status=400)
+    else:
+        return JsonResponse({'status': 'error'}, status=400)

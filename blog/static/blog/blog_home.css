@@ -40,6 +40,7 @@
 /* Bottom */
 .blog-post-bottom{
     padding: 10px;
+    width: 450px
 }
 .blog-post-bottom-buttons{
     margin-bottom: 10px;
@@ -89,10 +90,38 @@
 .blog-post-bottom-desc-comment-content{
     font-size: 14px;
     color: black;
-    margin-left: 5px;
+    display: inline;
 }
 .post-bottom-date{
     font-size: 14px;
     color: #8e8e8e;
     margin-bottom: 10px;
 }
+.post-bottom-comment-form{
+    display: flex;
+    justify-content: space-between;
+}
+.post-bottom-comment-form input{
+    width: 375px;
+    border: none;
+    outline: none;
+    background-color: inherit;
+    height: 20px;
+    font-size: 14px
+}
+.post-bottom-comment-submit{
+    color: #0095f6;
+    font-size: 12px;
+    font-weight: bold;
+    background-color: #fafafa;
+    border: none;
+}.post-bottom-comment-submit:hover{
+    cursor: pointer;
+}
+#id_post, #id_profile{
+    display: none;
+}.post-bottom-comment-form  label, .post-bottom-comment-form  ul{
+    display: none;
+}
+
+

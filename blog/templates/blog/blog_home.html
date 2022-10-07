@@ -67,16 +67,34 @@
                         </div>
                         <h1 class="blog-post-bottom-likes">{{ post_dict.like_obj|length }} likes</h1>
                         <div class="blog-post-bottom-desc-comment">
-                            <h1 class="blog-post-bottom-desc-comment-username">{{ post_dict.post_obj.profile.user.username }}</h1>
-                            <p class="blog-post-bottom-desc-comment-content">{{ post_dict.post_obj.desc }}</p>
+                            
+                            <p class="blog-post-bottom-desc-comment-content">
+                                <a class="blog-post-bottom-desc-comment-username"
+                                   href="{% url 'profile' post_dict.post_obj.profile.user.pk %}">
+                                    {{ post_dict.post_obj.profile.user.username }}
+                                </a>
+                                {{ post_dict.post_obj.desc }}
+                            </p>
                         </div>
-                        <p class="blog-post-bottom-comment-count">See all commens</p>
-                        <div class="blog-post-bottom-desc-comment">
-                            <h1 class="blog-post-bottom-desc-comment-username">nome</h1>
-                            <p class="blog-post-bottom-desc-comment-content">desc</p>
-                        </div>
+                        {% if post_dict.comment_first %}
+                            <p class="blog-post-bottom-comment-count">See all {{ post_dict.comment_obj|length }} comments</p>
+                            <div class="blog-post-bottom-desc-comment">
+                                <p class="blog-post-bottom-desc-comment-content"> 
+                                    <a class="blog-post-bottom-desc-comment-username"
+                                       href="{% url 'profile' post_dict.comment_first.profile.user.pk %}">
+                                        {{ post_dict.comment_first.profile.user.username }}
+                                    </a>
+                                    {{ post_dict.comment_first.comment }}
+                                </p>
+                            </div>
+                        {% endif %}
                         <h1 class="post-bottom-date">{{ post_dict.post_obj.date }}</h1>
-                        <p class="form-placeholdr">form placeholder</p>
+                        <!--  comment form  -->
+                        <form class="post-bottom-comment-form" method="POST" enctype="multipart/form-data"> 
+                            {% csrf_token %}
+                            {{ post_dict.comment_form }}
+                            <button class="post-bottom-comment-submit">Comment</button>
+                        </form>
                     </div>
                 </div>
                 <!--  Post Details  -->
@@ -277,6 +295,34 @@
         })
         $('.post-unlike-form').each(function(){
             funcUnlike($(this))
+        })
+        // Creates comment function
+        var funcComment = function(thisz){
+            thisz.on('submit', function(e){
+                e.preventDefault();
+                var serializeData = thisz.serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "post-comment" %}',
+                    data: serializeData,
+                    context: thisz,
+                    success: function(response){
+                        let wrapperAjaxDOM = $(this).parents().eq(3)
+                        let wrapperAjax = '.' + $(this).parents().eq(3).attr('class')
+                        let wrapper = '.' + $(this).parents().eq(2).attr('class')
+                        $(wrapperAjax).load("{% url 'home' %}" + ' ' + wrapper, function(){
+                            funcUnlike(wrapperAjaxDOM.find('.post-bottom-comment-form'))
+                        })
+                    },
+                    error: function(response){
+                        console.log(response)
+                    }
+                });
+            })
+        }
+        // Adds comment function
+        $('.post-bottom-comment-form').each(function(){
+            funcComment($(this))
         })
     </script>
 {% endblock ajax %}

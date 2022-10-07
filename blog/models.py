@@ -16,9 +16,8 @@ class BlogPostsLikes(models.Model):
     profile = models.ForeignKey(UsersProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(BlogPosts, on_delete=models.CASCADE)
 
-'''
-class BlogPostsComment(models.Model):
+
+class BlogPostsComments(models.Model):
     profile = models.ForeignKey(UsersProfile, on_delete=models.CASCADE)
     post = models.ForeignKey(BlogPosts, on_delete=models.CASCADE)
     comment = models.CharField(max_length=255)
-'''

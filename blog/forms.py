@@ -1,6 +1,6 @@
 import imp
 from django import forms
-from .models import BlogPosts, BlogPostsLikes
+from .models import BlogPosts, BlogPostsLikes, BlogPostsComments
 
 class BlogCreatePost(forms.ModelForm):
     desc = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Insert a description'}))
@@ -15,3 +15,9 @@ class BlogPostsLikesForm(forms.ModelForm):
         model = BlogPostsLikes
         fields = ['profile', 'post']
 
+
+class BlogPostsCommentsForm(forms.ModelForm):
+    comment = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Insert a comment...'}))
+    class Meta:
+        model = BlogPostsComments
+        fields = ['profile', 'post', 'comment']

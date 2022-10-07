@@ -1,10 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from users.models import UsersFollowers, UsersProfile
-from users.forms import UsersFollowersForm
-from blog.models import BlogPosts, BlogPostsLikes
-from .forms import BlogCreatePost, BlogPostsLikesForm
-from random import sample
+from .forms import BlogCreatePost
 from .methods import sort_follower_suggestions, sort_home_posts
 
 

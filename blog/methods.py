@@ -1,7 +1,7 @@
 from users.models import UsersFollowers, UsersProfile
 from users.forms import UsersFollowersForm
 from blog.models import BlogPosts, BlogPostsLikes
-from .forms import BlogPostsLikesForm
+from .forms import BlogPostsCommentsForm, BlogPostsLikesForm, BlogPostsComments
 from random import sample
 
 
@@ -63,9 +63,9 @@ def sort_home_posts(request):
             is_liked = True
         else:
             is_liked = False
-        comment_form = None  # farei num futuro
-        comment_obj = None  # farei num futuro
-        comment_first = None  # farei num futuro
+        comment_form = BlogPostsCommentsForm({'profile': request.user.profile, 'post': post_obj})
+        comment_obj = BlogPostsComments.objects.filter(post=post_obj) 
+        comment_first = BlogPostsComments.objects.filter(post=post_obj).last()
         post_index += 1
         post_dict = {
             'post_obj': post_obj, 'like_form': like_form, 'like_obj': like_obj, 'is_liked': is_liked, 
