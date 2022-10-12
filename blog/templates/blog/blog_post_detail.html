@@ -1,0 +1,288 @@
+{% extends 'blog/blog_header_base.html' %}
+{% load static %}
+
+
+
+{% block title %}
+    Post
+{% endblock title %}
+
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'blog/blog_home_detail.css' %}">
+{% endblock css %}
+
+
+{% block content %}
+<!--  simula safadamente uma popup  -->
+<div class="blog-detail-section">
+    <p class="close-btn-detail">+</p>
+    <div class="blog-detail-wrapper-ajax-{{ post.post_index }}">
+        <div class="blog-detail-wrapper-{{ post.post_index }}">
+            <!--  post section  -->
+            <div class="blog-detail">
+                <div class="blog-detail-content-wrappper">
+                    <img class="blog-detail-content" src="{{ post.post_obj.image.url }}" alt="post content">
+                </div>
+                <div class="blog-detail-bottom">
+                    <div class="blog-detail-top">
+                        <a href="{% url 'profile' post.post_obj.profile.user.pk %}">
+                            <img class="blog-detail-top-pfp" src="{{ post.post_obj.profile.pfp.url }}" alt="pfp">
+                        </a>
+                        <a href="{% url 'profile' post.post_obj.profile.user.pk %}">
+                            <h1 class="blog-detail-top-username">{{ post.post_obj.profile.user.username }}</h1>
+                        </a>
+                    </div>
+
+                    <div class="blog-detail-bottom-comment-section">
+                        <div class="blog-detail-bottom-desc-comment">
+                            <a href="{% url 'profile' post.post_obj.profile.user.pk %}">
+                                <img class="blog-detail-top-pfp" src="{{ post.post_obj.profile.pfp.url }}" alt="pfp">
+                            </a>
+                            <p class="blog-detail-bottom-desc-comment-content">
+                                <a class="blog-detail-bottom-desc-comment-username"
+                                href="{% url 'profile' post.post_obj.profile.user.pk %}">
+                                    {{ post.post_obj.profile.user.username }}
+                                </a>
+                                {{ post.post_obj.desc }}
+                            </p>
+                        </div>
+                        {% for comment in post.comment_obj %}
+                            <div class="blog-detail-bottom-desc-comment">
+                                <a href="{% url 'profile' comment.profile.user.pk %}">
+                                    <img class="blog-detail-top-pfp" src="{{ comment.profile.pfp.url }}" alt="pfp">
+                                </a>
+                                <p class="blog-detail-bottom-desc-comment-content">
+                                    <a class="blog-detail-bottom-desc-comment-username"
+                                    href="{% url 'profile' comment.profile.user.pk %}">
+                                        {{ comment.profile.user.username }}
+                                    </a>
+                                    {{ comment.comment }}
+                                </p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="blog-detail-bottom-wrapper">
+                    <div class="blog-detail-bottom-buttons">
+                        <!--  Like forms  -->
+                        {% if not post.is_liked %}
+                        <form class="detail-like-form" method="POST" enctype="multipart/form-data"> 
+                            {% csrf_token %}
+                            <div class="form-hide">
+                                {{ post.like_form }}
+                            </div>  
+                            <button class="blog-detail-like" name="like-detail">
+                                <img class="blog-detail-like-img" src="{% static 'blog/logos/logo-like.png' %}" alt="like-btn">
+                            </button>
+                        </form>
+                        {% else %}
+                        <form class="detail-unlike-form" method="POST" enctype="multipart/form-data"> 
+                            {% csrf_token %}
+                            <div class="form-hide">
+                                {{ post.like_form }}
+                            </div>  
+                            <button class="blog-detail-unlike" name="unlike-detail">
+                                <img class="blog-detail-like-img" src="{% static 'blog/logos/logo-like-red.png' %}" alt="like-btn">
+                            </button>
+                        </form>
+                        {% endif %}
+                        <img class="blog-detail-comment" src="{% static 'blog/logos/logo-coment.png' %}" alt="coment-btn">
+                    </div>
+                    <h1 class="blog-detail-bottom-likes">{{ post.like_obj|length }} likes</h1>
+                    <h1 class="detail-bottom-date">{{ post.post_obj.date }}</h1>
+                    <!--  comment form  -->
+                    <form class="detail-bottom-comment-form" method="POST" enctype="multipart/form-data"> 
+                        {% csrf_token %}
+                        {{ post.comment_form }}
+                        <button class="detail-bottom-comment-submit">Comment</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+            <!--  Post like popup  -->
+            <div class="blog-detail-like-popup-wrapper">
+                <div class="blog-detail-like-popup">
+                    <h1 class="blog-detail-like-popup-title">Likes</h1>
+                    {% for obj in post.like_obj  %}
+                        <div class="blog-detail-like-popup-profile">
+                            <a href="{% url 'profile' obj.profile.user.pk %}">
+                                <img class="blog-detail-like-popup-pfp" src="{{ obj.profile.pfp.url }}" alt="pfp">
+                            </a>
+                            <a href="{% url 'profile' obj.profile.user.pk %}">
+                                <h1 class="blog-detail-like-popup-username">{{ obj.profile.user.username }}</h1>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    <h1 class="blog-detail-like-popup-close">+</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+        
+    <script>
+        // add popup
+        var likePopupAdd = function(wrapperAjaxDOM){
+            let popup = wrapperAjaxDOM.find('.blog-detail-like-popup-wrapper')
+            let close = wrapperAjaxDOM.find('.blog-detail-like-popup-close')
+            let open = wrapperAjaxDOM.find('.blog-detail-bottom-likes')
+            open.on('click', function(){
+                popup.css('display', 'flex')
+            })
+            close.on('click', function(){
+                popup.css('display', 'none')
+            })
+        }
+        let postSection = $('.blog-detail-section')
+        postSection.children().each(function(){
+            likePopupAdd($(this))
+        })
+
+        // Creates like and unlike functions, referencing each other
+        var funcLike = function(thisx){
+            var serializeData = thisx.serialize();
+            $.ajax({
+                type:'POST',
+                url: '{% url "post-like" %}',
+                data: serializeData,
+                context: thisx,
+                success: function(response){
+                    let wrapperAjaxDOM = $(this).parents().eq(4)
+                    let wrapperAjax = '.' + $(this).parents().eq(4).attr('class')
+                    let wrapper = '.' + $(this).parents().eq(3).attr('class')
+                    $(wrapperAjax).load("{% url 'post-detail' post.post_index %}" + ' ' + wrapper, function(){
+                        var unlikeForm = wrapperAjaxDOM.find('.detail-unlike-form')
+                        unlikeForm.on('submit', function(e){
+                            e.preventDefault()
+                            funcUnlike(unlikeForm)
+                        })
+                        let postImg = wrapperAjaxDOM.find('.blog-detail-content')
+                        postImg.on("dblclick", function(e){
+                            e.preventDefault()
+                            funcUnlike(unlikeForm)
+                        })
+                        likePopupAdd(wrapperAjaxDOM)
+                        funcComment(wrapperAjaxDOM.find('.detail-bottom-comment-form'))
+                    })
+                },
+                error: function(response){
+                    console.log('ERROR')
+                }
+            });
+        }
+        var funcUnlike = function(thisy){
+            var serializeData = thisy.serialize();
+            $.ajax({
+                type:'POST',
+                url: '{% url "post-unlike" %}',
+                data: serializeData,
+                context: thisy,
+                success: function(response){
+                    let wrapperAjaxDOM = $(this).parents().eq(4)
+                    let wrapperAjax = '.' + $(this).parents().eq(4).attr('class')
+                    let wrapper = '.' + $(this).parents().eq(3).attr('class')
+                    $(wrapperAjax).load("{% url 'post-detail' post.post_index %}" + ' ' + wrapper, function(){
+                        var likeForm = wrapperAjaxDOM.find('.detail-like-form')
+                        likeForm.on('submit', function(e){
+                            e.preventDefault()
+                            funcLike(likeForm)
+                        })
+                        let postImg = wrapperAjaxDOM.find('.blog-detail-content')
+                        postImg.on("dblclick", function(e){
+                            e.preventDefault()
+                            funcLike(likeForm)
+                        })
+                        likePopupAdd(wrapperAjaxDOM)
+                        funcComment(wrapperAjaxDOM.find('.detail-bottom-comment-form'))
+                    })
+                },
+                error: function(response){
+                    console.log('ERROR')
+                }
+            });
+        }
+        // Adds like and unlike functions initially
+        $('.detail-like-form').each(function(){
+            let form = $(this)
+            form.on('submit', function(e){
+                e.preventDefault()
+                funcLike(form)
+            })
+            let postImg = form.parents().eq(3).find('.blog-detail-content')
+            postImg.on("dblclick", function(e){
+                e.preventDefault()
+                funcLike(form)
+            })
+        })
+        $('.detail-unlike-form').each(function(){
+            let form = $(this)
+            form.on('submit', function(e){
+                e.preventDefault()
+                funcUnlike(form)
+            })
+            let postImg = form.parents().eq(3).find('.blog-detail-content')
+            postImg.on("dblclick", function(e){
+                e.preventDefault()
+                funcUnlike(form)
+            })
+        })
+        // Creates comment function
+        var funcComment = function(thisz){
+            thisz.on('submit', function(e){
+                e.preventDefault();
+                var serializeData = thisz.serialize();
+                $.ajax({
+                    type:'POST',
+                    url: '{% url "post-comment" %}',
+                    data: serializeData,
+                    context: thisz,
+                    success: function(response){
+                        let wrapperAjaxDOM = $(this).parents().eq(3)
+                        let wrapperAjax = '.' + $(this).parents().eq(3).attr('class')
+                        let wrapper = '.' + $(this).parents().eq(2).attr('class')
+                        $(wrapperAjax).load("{% url 'post-detail' post.post_index %}" + ' ' + wrapper, function(){
+                            // Adds like/unlike functions after reload
+                            var unlikeForm = wrapperAjaxDOM.find('.detail-unlike-form')
+                            unlikeForm.on('submit', function(e){
+                                e.preventDefault()
+                                funcUnlike(unlikeForm)
+                            })
+                            let postImg = wrapperAjaxDOM.find('.blog-detail-content')
+                            postImg.on("dblclick", function(e){
+                                e.preventDefault()
+                                funcUnlike(unlikeForm)
+                            })
+
+                            var likeForm = wrapperAjaxDOM.find('.detail-like-form')
+                            likeForm.on('submit', function(e){
+                                e.preventDefault()
+                                funcLike(likeForm)
+                            })
+                            postImg.on("dblclick", function(e){
+                                e.preventDefault()
+                                funcLike(likeForm)
+                            })
+                            likePopupAdd(wrapperAjaxDOM)
+                            funcComment(wrapperAjaxDOM.find('.detail-bottom-comment-form'))
+                        })
+                    },
+                    error: function(response){
+                        console.log('ERROR')
+                    }
+                });
+            })
+        }
+        // Adds comment function
+        $('.detail-bottom-comment-form').each(function(){
+            funcComment($(this))
+        })
+    </script>
+    <script>
+        let closeBtn = $('.close-btn-detail')
+        closeBtn.on('click', function(){
+            window.history.back()
+        })
+    </script>
+{% endblock content %}

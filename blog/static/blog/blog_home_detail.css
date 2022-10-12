@@ -1,112 +1,151 @@
-.blog-posts-content-section{
-    margin-top: 80px;
-    font-family: sans-serif;
+.blog-detail-section{
+    background-color: rgb(0, 0, 0, 0.7);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
     display: flex;
     justify-content: center;
+    align-items: center;
+}.close-btn-detail{
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    transform: rotate(45deg);
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+}.close-btn-detail:hover{
+    cursor: pointer;
 }
-.blog-posts-section{
-    
-}
-/* Post */
-.blog-post{
+.blog-detail{
+    background-color: #ffffff;
     border: 1px solid #dbdbdb;
-    border-radius: 10px;
+    border-radius: 5px;
     width: fit-content;
     margin-bottom: 15px;
+    font-family: sans-serif;
+    display: flex;
 }
-/* Top Post */
-.blog-post-top{
+
+/* Content */
+.blog-detail-content-wrappper{
+    height: 550px;
+    width: 470px;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+.blog-detail-content{
+    width: 470px;
+    object-fit: contain;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+/* Top detail */
+.blog-detail-top{
     display: flex;
     align-items: center;
-    padding: 10px;
+    border-bottom: 1px solid #dbdbdb;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 }
-.blog-post-top-pfp{
+.blog-detail-top-pfp{
     height: 32px;
     width: 32px;
     border-radius: 50%;
     object-fit: contain;
     margin-right: 10px;
 }
-.blog-post-top-username{
+.blog-detail-top-username{
     font-size: 14px;
     color: #262626;
     font-weight: bold;
 }
-/* Content */
-.blog-post-content{
-    width: 470px;
-    object-fit: contain;
-}
-
 /* Bottom */
-.blog-post-bottom{
+.blog-detail-bottom{
     padding: 10px;
-    width: 450px
+    width: 450px;
 }
-.blog-post-bottom-buttons{
+.blog-detail-bottom-wrapper{
+    margin-top: 10px;
+    border-top: 1px solid #dbdbdb;
+    padding-top: 10px;
+}
+.blog-detail-bottom-buttons{
     margin-bottom: 10px;
     display: flex;
 }
-.blog-post-like, .blog-post-unlike{
+.blog-detail-like, .blog-detail-unlike{
     height: 20px;
     border: none;
     background-color: inherit;
-}.blog-post-like-img, .blog-post-unlike-img{
+}.blog-detail-like-img, .blog-detail-unlike-img{
     height: 20px;
     border: none;
 }
-.blog-post-comment{
+.blog-detail-comment{
     height: 20px;
     width: 20px;
     object-fit: contain;
     margin-left: 10px;
 }
-.blog-post-comment:hover, .blog-post-like-img:hover, .blog-post-unlike-img:hover{
+.blog-detail-comment:hover, .blog-detail-like-img:hover, .blog-detail-unlike-img:hover{
     cursor: pointer;
 }
 .form-hide{
-    display: block;
+    display: none;
 }
 
-.blog-post-bottom-likes{
+.blog-detail-bottom-likes{
     font-size: 14px;
     color: #262626;
     font-weight: bold;
     margin-bottom: 10px;
-}.blog-post-bottom-likes:hover{
+}.blog-detail-bottom-likes:hover{
     cursor: pointer;
 }
-.blog-post-bottom-desc-comment{
+.blog-detail-bottom-comment-section{
+    height: 350px;
+    overflow-y: scroll;
+}
+.blog-detail-bottom-desc-comment{
     display: flex;
     margin-bottom: 10px;
+    align-items: center;
 }
-.blog-post-bottom-comment-count{
+.blog-detail-bottom-comment-count{
     font-size: 14px;
     color: #8e8e8e;
     margin-bottom: 10px;
 }
-.blog-post-bottom-desc-comment-username{
+.blog-detail-bottom-desc-comment-username{
     font-size: 14px;
     color: #262626;
     font-weight: bold;
 }
-.blog-post-bottom-desc-comment-content{
+.blog-detail-bottom-desc-comment-content{
     font-size: 14px;
     color: black;
     display: inline;
     overflow-wrap: break-word;
-    width: 450px;
+    width: 380px;
 }
-.post-bottom-date{
+
+.detail-bottom-date{
     font-size: 14px;
     color: #8e8e8e;
     margin-bottom: 10px;
 }
-.post-bottom-comment-form{
+.detail-bottom-comment-form{
     display: flex;
     justify-content: space-between;
 }
-.post-bottom-comment-form input{
+.detail-bottom-comment-form input{
     width: 375px;
     border: none;
     outline: none;
@@ -114,24 +153,21 @@
     height: 20px;
     font-size: 14px
 }
-.post-bottom-comment-submit{
+.detail-bottom-comment-submit{
     color: #0095f6;
     font-size: 12px;
     font-weight: bold;
     background-color: #fafafa;
     border: none;
-}.post-bottom-comment-submit:hover{
+}.detail-bottom-comment-submit:hover{
     cursor: pointer;
 }
-#id_post, #id_profile{
+#id_detail, #id_profile{
     display: none;
-}.post-bottom-comment-form  label, .post-bottom-comment-form  ul{
+}.detail-bottom-comment-form  label, .detail-bottom-comment-form  ul, .detail-bottom-comment-form  select{
     display: none;
 }
-/*
-Post-like-popup
-*/
-.blog-post-like-popup-wrapper{
+.blog-detail-like-popup-wrapper{
     background-color: rgb(0, 0, 0, 0.7);
     position: fixed;
     width: 100vw;
@@ -144,14 +180,14 @@ Post-like-popup
     align-items: center;
     z-index: 100;
 }
-.blog-post-like-popup{
+.blog-detail-like-popup{
     width: 400px;
     height: 400px;
     background-color: #ffffff;
     border: 1px solid #dbdbdb;
     border-radius: 10px;
 }
-.blog-post-like-popup-title{
+.blog-detail-like-popup-title{
     margin-top: 10px;
     padding-bottom: 10px;
     border-bottom: 1px solid #dbdbdb;
@@ -160,25 +196,25 @@ Post-like-popup
     font-weight: bold;
     text-align: center;
 }
-.blog-post-like-popup-profile{
+.blog-detail-like-popup-profile{
     margin-top: 15px;
     margin-left: 10px;
     display: flex;
     align-items: center;
 }
-.blog-post-like-popup-pfp{
+.blog-detail-like-popup-pfp{
     height: 44px;
     width: 44px;
     object-fit: contain;
     border-radius: 50%;
 }
-.blog-post-like-popup-username{
+.blog-detail-like-popup-username{
     font-size: 14px;
     color: #262626;
     margin-left: 10px;
     font-weight: bold;
 }
-.blog-post-like-popup-close{
+.blog-detail-like-popup-close{
     position: fixed;
     top: 15px;
     right: 15px;
@@ -186,6 +222,6 @@ Post-like-popup
     font-size: 30px;
     color: white;
     font-weight: bold;
-}.blog-post-like-popup-close:hover{
+}.blog-detail-like-popup-close:hover{
     cursor: pointer;
 }

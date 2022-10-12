@@ -175,10 +175,12 @@ Hoje tava meio duro de tempo, então a parte sugestão de followers eu faço ama
 
 DIA 6/7- Criei o sistema de sugestão usando a biblioteca RANDOM do python. 
 
+
 DIA 8- DESCOBRI UM ERRO BRUTAL NO CÓDIGO, bem a form q eu fiz foi usando password1 e 2, mas nenhuma password normal, então quando eram salvos os user, não tinham senhas e por isso n era possivel achar eles pelo authenticate(), a solução é na view salvar o modelo e guardar o return numa var e mudar a senha e salvar denovo.
 >>> user = form.save()
     user.set_password(form.cleaned_data['password1'])
     user.save()
+
 
 DIA 9- Criei os modelos simples de like que recebe user e o post, atualizei a postlist para 
 post_list = [] # -> 0-posts_obj, 1-likeform, 2-like obj, 3-is_liked , 4-index 5-commentform, 6-comment obj, 7-commetfirst
@@ -254,5 +256,61 @@ Na parte do template eu coloquei o código:
 copiei tmb a explicação q eu coloquei, pode ser útil no futuro. Aqui eu fiz o ajax um pouco diferente, eu crie ele como eu faria antes dentro do .each(), mas depois eu fiz diferente, eu separei a função numa var que recebe o objeto jquery e usa o .on() nele e continua normalmente aí eu depois só chamo essa função, mas agora olhando eu vejo q eu posso deixar o .on() fora da função para deixar ela mais pura ainda, mas vou ver isso amanhã q é o dia do código refatorado. 
 Ah e eu separei o ajax em funções pq é pra elas se chamarem entre si, como vc pode ver a funcLike tem funcUnlike dentro dela e a funcUnlike tem funcLike dentro dela, achei estranho essa relação simbiótica, mas ta funcionando e boa.
 COISAS PARA VER AMANHÃ: QUERIA DIVIDIR O TEMPLATE EM MAIS PARTES, CRIAR UM METHODS.PY PARA DEIXAR O TRABALHO MAIS PESADO DAS VIEWS DENTRO DE LÁ E REFAZER OS AJAX COM FUNÇÕES, GOSTEI DISSO.
+
+
+DIA 10- Criei o modelo do comment, q é bem parecido com o do Like, mas com um comentário junto e utilizei ajax pra implementar, n vou escrever o processo aqui pq realmente foi praticamente a mesma merda q o Like/Dislike. 
+Refatorei o código pela primeira vez, gostei muito do processo e a view da home ficou bem menor. Eu criei um methods.py q eu deixei as funções dentro e refiz elas para ficarem menores e depois é só importar e usa-las
+
+
+DIA 11- Hoje eu ajustei tudo aos comments nos template, adicionei um condição pra se o post tiver comentarios, adicionei os links para os perfis que comentaram e depois eu queria adicionar a double click na imagem dar o like/dislike e para isso tive que refatorar denovo o Ajax.
+Aqui ta o resultado do funcLike e sua aplicação
+>>> var funcLike = function(thisx){
+            var serializeData = thisx.serialize();
+            $.ajax({
+                type:'POST',
+                url: '{% url "post-like" %}',
+                data: serializeData,
+                context: thisx,
+                success: function(response){
+                    let wrapperAjaxDOM = $(this).parents().eq(4)
+                    let wrapperAjax = '.' + $(this).parents().eq(4).attr('class')
+                    let wrapper = '.' + $(this).parents().eq(3).attr('class')
+                    $(wrapperAjax).load("{% url 'home' %}" + ' ' + wrapper, function(){
+                        var unlikeForm = wrapperAjaxDOM.find('.post-unlike-form')
+                        unlikeForm.on('submit', function(e){
+                            e.preventDefault()
+                            funcUnlike(unlikeForm)
+                        })
+                        let postImg = wrapperAjaxDOM.find('.blog-post-content')
+                        postImg.on("dblclick", function(e){
+                            e.preventDefault()
+                            funcUnlike(unlikeForm)
+                        })
+                    })
+                },
+                error: function(response){
+                    console.log('ERROR')
+                }
+            });
+        }
+
+        $('.post-like-form').each(function(){
+            let form = $(this)
+            form.on('submit', function(e){
+                e.preventDefault()
+                funcLike(form)
+            })
+            let postImg = form.parents().eq(3).find('.blog-post-content')
+            postImg.on("dblclick", function(e){
+                e.preventDefault()
+                funcLike(form)
+            })
+        })
+Ficou assim, se comparar com os anteriores da para ver que eu tirei funcionalidade do funLike para deixar fora dele, isso pra deixar a função mais flexível, assim eu consegui dividir ela de apenas um .on com submit para dois .on com submit e dblclick. Agora eu vou adicionar o coração que aparece quando você da like clicando na imagem, to pensando em só deixar um coração no meio ... é dei uma lida e essa ideia pelo visto foi de base já que não da pra animar transição de display :( vou almoçar e pensar em uma solução.
+
+
+
+
+
 
 

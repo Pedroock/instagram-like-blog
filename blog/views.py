@@ -1,7 +1,9 @@
+from turtle import pos
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from blog.models import BlogPosts
 from .forms import BlogCreatePost
-from .methods import sort_follower_suggestions, sort_home_posts
+from .methods import sort_follower_suggestions, sort_home_posts, detail_post
 
 
 @login_required
@@ -23,3 +25,8 @@ def blog_home(request):
         'suggestions_list': sort_follower_suggestions(request),
     }
     return render(request, 'blog/blog_home.html', context)
+
+
+@login_required
+def blog_post_detail(request, pk):
+    return render(request, 'blog/blog_post_detail.html', {'post': detail_post(request, pk)})

@@ -66,7 +66,7 @@ def sort_home_posts(request):
         comment_form = BlogPostsCommentsForm({'profile': request.user.profile, 'post': post_obj})
         comment_obj = BlogPostsComments.objects.filter(post=post_obj) 
         comment_first = BlogPostsComments.objects.filter(post=post_obj).last()
-        post_index += 1
+        post_index = post_obj.pk
         post_dict = {
             'post_obj': post_obj, 'like_form': like_form, 'like_obj': like_obj, 'is_liked': is_liked, 
             'comment_form': comment_form, 'comment_obj': comment_obj, 'comment_first': comment_first,
@@ -74,3 +74,27 @@ def sort_home_posts(request):
         }
         post_utils_list.append(post_dict)
     return post_utils_list
+
+
+def detail_post(request, pk):
+    '''
+    dictionary {'post_obj': post_obj, 'like_form': like_form, 'like_obj': like_obj, 'is_liked': True, 
+                'comment_form': comment_form, 'comment_obj': comment_obj, 'post_index': post_index,
+               }
+    will be created for the detail post
+    '''
+    post_obj = BlogPosts.objects.filter(pk=pk).first()
+    if BlogPostsLikes.objects.filter(post=post_obj, profile=request.user.profile).first():
+        is_liked = True
+    else:
+        is_liked = False
+    post = {
+        'post_obj': post_obj,
+        'like_form': BlogPostsLikesForm({'profile': request.user.profile, 'post': post_obj}),
+        'like_obj': BlogPostsLikes.objects.filter(post=post_obj),
+        'is_liked': is_liked,
+        'comment_form': BlogPostsCommentsForm({'profile': request.user.profile, 'post': post_obj}),
+        'comment_obj': BlogPostsComments.objects.filter(post=post_obj),
+        'post_index': pk
+    }
+    return post

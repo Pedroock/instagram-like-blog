@@ -7,7 +7,7 @@ from django_resized import ResizedImageField
 # Create your models here.
 class BlogPosts(models.Model):
     profile = models.ForeignKey(UsersProfile, on_delete=models.CASCADE)
-    image = ResizedImageField(size=[500, 1500], upload_to='post_images')
+    image = ResizedImageField(size=[1920, 1080], upload_to='post_images')
     desc = models.CharField(max_length=255)
     date = models.DateField(default=date.today())
 
