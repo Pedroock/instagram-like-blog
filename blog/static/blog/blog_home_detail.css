@@ -40,7 +40,8 @@
     border-top-left-radius: 5px;
 }
 .blog-detail-content{
-    width: 470px;
+    max-width: 470px;
+    max-height: 550px;
     object-fit: contain;
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px;

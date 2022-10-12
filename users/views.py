@@ -1,3 +1,4 @@
+import imp
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout, login, authenticate
 from django.contrib.auth.models import User
@@ -5,6 +6,7 @@ from .forms import UsersLoginForm, UsersProfileUpdateForm, UsersRegisterForm, Us
 from .models import UsersProfile, UsersFollowers
 from django.contrib.auth.decorators import login_required
 from blog.models import BlogPosts
+from .methods import sort_profile_posts
 
 
 # Create your views here.
@@ -66,7 +68,7 @@ def users_profile(request, pk):
     print(follow_check)
     context = {
         'profile': profile,
-        'posts': BlogPosts.objects.filter(profile=profile),
+        'profile_posts': sort_profile_posts(profile),
         'followers': followers,
         'followeds': followed,
         'follow_form': UsersFollowersForm({'follower': request.user, 'followed': profile}),

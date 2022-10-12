@@ -63,8 +63,19 @@
         </div>
     </div>
     <div class="users-profile-posts">
-        {% for post in posts %}
-            <img class="users-profile-posts-image" src="{{ post.image.url }}" alt="post">
+        {% for post_dict in profile_posts %}
+            <a href="{% url 'post-detail' post_dict.post_obj.pk %}">
+                <img class="profile-post-image" src="{{ post_dict.post_obj.image.url }}" alt="post">
+                <div class="profile-post-hover">
+                    <div class="hover-content">
+                        <p class="profile-post-text">{{ post_dict.like_obj|length }}</p> 
+                        <img class="profile-post-logo" src="{% static 'blog/logos/logo-img-like-solid.png' %}" alt="">
+                        <span class="space"> </span>
+                        <p class="profile-post-text">{{ post_dict.comment_obj|length }}</p>
+                        <img class="profile-post-logo" src="{% static 'blog/logos/logo-coment-solid.png' %}" alt="">
+                    </div>
+                </div>
+            </a>
         {% endfor %}
     </div>
 {% endblock content %}

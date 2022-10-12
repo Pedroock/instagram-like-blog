@@ -1,9 +1,9 @@
+from multiprocessing import context
 from turtle import pos
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from blog.models import BlogPosts
 from .forms import BlogCreatePost
-from .methods import sort_follower_suggestions, sort_home_posts, detail_post
+from .methods import sort_follower_suggestions, sort_home_posts, detail_post, discover_posts
 
 
 @login_required
@@ -30,3 +30,8 @@ def blog_home(request):
 @login_required
 def blog_post_detail(request, pk):
     return render(request, 'blog/blog_post_detail.html', {'post': detail_post(request, pk)})
+
+
+@login_required
+def blog_discover(request):
+    return render(request, 'blog/blog_discover.html', {'discover_posts': discover_posts(request)})

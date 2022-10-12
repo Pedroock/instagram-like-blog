@@ -308,6 +308,19 @@ Aqui ta o resultado do funcLike e sua aplicação
         })
 Ficou assim, se comparar com os anteriores da para ver que eu tirei funcionalidade do funLike para deixar fora dele, isso pra deixar a função mais flexível, assim eu consegui dividir ela de apenas um .on com submit para dois .on com submit e dblclick. Agora eu vou adicionar o coração que aparece quando você da like clicando na imagem, to pensando em só deixar um coração no meio ... é dei uma lida e essa ideia pelo visto foi de base já que não da pra animar transição de display :( vou almoçar e pensar em uma solução.
 
+DIA 12- Eu deixei de lado a ideia do coração por enquanto, foquei na popup de qnd vc abre o post, fiz VARIAS tentativas e por fim cheguei a ideia de só fazer uma view nova com o post em detalhe e dar load nessa view. A view recebe o PK do post e joga numa função que eu criei que separa o dicionario e ent o template basicamente faz tudo que a home faz com os posts, mas só pra um post, todos ajax de like, dislike e comment persistem com pequenas mudanças. Aí é só deixar algum botão que vai dar load nessa pagina. Inicialmente eu queria separar uma parte da home para deixa o post detail como uma popup, mas me deparei com problemas como a porra dos script n funcionando nem com macumba e e também eu teria que importar o css para a home e ia ficar 300x mais confuso do que já ta, então eu decidi só fazer com q eu saia da home e vá para a view do detail. Uma ideia muit engraçada que eu tive foi ao inves de fazer a popup, simular uma e foi o que eu fiz, quando sou redirecionado para o detail, a página toda parece uma popup da home, mas não é e funcionou legal. AGORA A PARTE IMPORTANTE QUE EU ADOREI USAR E PRETENDO USAR NO FUTURO CASO NECESSÁRIO
+>>> 	let closeBtn = $('.close-btn-detail')
+        closeBtn.on('click', function(){
+            window.history.back()
+        })
+esse window.history.back() é muito interessante, ele te joga uma página para tras e isso é perfeito pro meu fakepopup, mas só tem um problema, a página é carregada da memória e não é reloadada, tem métodos para referir a página que te jogou para a atual >>> window.location=document.referrer;    mas isso tem o problema de que a página perde o scroll dela e isso acabaria com a imersão do site. Foi então que veio mais um pedaço de código muito interessante que foi o 
+>>> window.onpageshow = function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+Esse eu também achei muito foda, tem os eventos de window, eu lembrava do window.onload por ex, q é quando você abre uma página nova, tentei usar isso mas cai em loop infinito, esse onpageshow ele indica não só quando a página é loaded, mas também quando você volta para ela da memória. Esse persisted pelo que entendi é indicando exatamente para se a página vem da memória, então a minha popupfake agora também da refresh na home sem perder o scroll e assim as ações de ambas estão interligadas, eu posso dar um like na home e dislike na fakepopup e vice versa. Funcionando perfeito até agora.
+
 
 
 

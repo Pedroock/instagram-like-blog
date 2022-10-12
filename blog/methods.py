@@ -98,3 +98,27 @@ def detail_post(request, pk):
         'post_index': pk
     }
     return post
+
+
+def discover_posts(request):
+    followed_users = []
+    for profile in sort_follow_dict(request)['followeds']:
+        followed_users.append(profile.user)
+    not_followed_profiles_query = UsersProfile.objects.exclude(user__in=followed_users).exclude(user=request.user)
+    not_followed_profiles = []
+    for profile in not_followed_profiles_query:
+        not_followed_profiles.append(profile)
+    discover_posts_query = BlogPosts.objects.filter(profile__in=not_followed_profiles)
+    discover_posts = []
+    for post in discover_posts_query:
+        post_dict = {
+            'post_obj': post,
+            'comment_obj': BlogPostsComments.objects.filter(post=post),
+            'like_obj': BlogPostsLikes.objects.filter(post=post)
+        }
+        discover_posts.append(post_dict)
+    if len(discover_posts) < 50:
+        discover_posts = sample(discover_posts, len(discover_posts))
+    else:
+        discover_posts = sample(discover_posts, 50)
+    return discover_posts
