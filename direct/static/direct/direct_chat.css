@@ -1,0 +1,99 @@
+body{
+    display: flex;
+    justify-content: center;
+    font-family: sans-serif;
+}
+.direct-wrapper{
+    border: solid 1px #dbdbdb;
+    margin-top: 80px;
+    display: flex;
+    width: fit-content;
+    background-color: #ffffff;
+    border-radius: 5px;
+}
+.direct-chat{
+    height: 510px;
+    width: 500px;
+}
+.direct-chat-title{
+    height: 60px;
+    width: inherit;
+    border-bottom: 1px solid #dbdbdb;
+    display: flex;
+    align-items: center;
+    padding-left: 25px;
+}
+.direct-chat-title-pfp{
+    height: 24px;
+    width: 24px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+.direct-chat-title-username{
+    font-size: 14px;
+    color: #262626;
+    font-weight: bold;
+    margin-left: 15px;
+}
+
+.direct-chat-messages{
+    background-color: red;
+    height: 390px;
+    width: inherit;
+}
+
+.direct-chat-input{
+    background-color: green;
+    height: 60px;
+    width: inherit;
+}
+
+
+
+
+.direct-profiles{
+    width: 350px;
+    border-right: solid 1px #dbdbdb;
+}
+.direct-profiles-title{
+    height: 60px;
+    border-bottom: solid 1px #dbdbdb;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.current-user{
+    color: #262626;
+    font-size: 16px;
+    font-weight: bold;
+}
+.direct-profiles-friends{
+    height: 450px;
+    overflow-y: scroll;
+}
+.direct-profile{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    padding-left: 10px;
+    width: inherit;
+}
+.highlight{
+    background-color: rgb(0, 0, 0, 0.04);
+}
+.direct-profile:hover{
+    background-color: rgb(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+.direct-profile-pfp{
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.direct-profile-usernme{
+    color: #262626;
+    font-size: 14px;
+    font-weight: bold;
+}

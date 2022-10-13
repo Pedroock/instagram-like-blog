@@ -1,0 +1,60 @@
+{% extends 'blog/blog_header_base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Direct
+{% endblock title %}
+
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'direct/direct_chat.css' %}">
+{% endblock css %}
+
+
+{% block content %}
+    
+    <div class="direct-wrapper">
+        <div class="direct-profiles">
+            <div class="direct-profiles-title">
+                <h1 class="current-user">{{ request.user.username }}</h1>
+            </div>
+            <div class="direct-profiles-friends">
+                {% for profile in mutuals %}
+                    {% if profile == reciever %}
+                        <a href="{% url 'direct-chat' profile.pk %}">
+                            <div class="direct-profile highlight"> <!-- add highlight class -->
+                                <img class="direct-profile-pfp" src="{{ profile.pfp.url }}" alt="pfp">
+                                <h1 class="direct-profile-usernme">{{ profile.user.username }}</h1>
+                            </div>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'direct-chat' profile.pk %}">
+                            <div class="direct-profile">
+                                <img class="direct-profile-pfp" src="{{ profile.pfp.url }}" alt="pfp">
+                                <h1 class="direct-profile-usernme">{{ profile.user.username }}</h1>
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>    
+        </div>
+
+        <div class="direct-chat">
+            <div class="direct-chat-title">
+                <img class="direct-chat-title-pfp" src="{{ reciever.pfp.url }}" alt="">
+                <h1 class="direct-chat-title-username">{{ reciever.user.username }}</h1>
+            </div>
+            <div class="direct-chat-messages">
+
+            </div>
+            <div class="direct-chat-input">
+                <input class="chat-message-input" type="text">
+                <input class="chat-message-submit" type="button">
+            </div>
+        </div>
+    
+    </div>
+
+{% endblock content %}

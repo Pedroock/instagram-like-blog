@@ -8,5 +8,6 @@ urlpatterns = [
     path('', include('blog.urls')),
     path('users/', include('users.urls')),
     path('ajax/', include('ajax.urls')),
+    path('direct/', include('direct.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

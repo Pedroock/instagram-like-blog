@@ -1,0 +1,42 @@
+{% extends 'blog/blog_header_base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Direct
+{% endblock title %}
+
+
+
+{% block css %}
+    <link rel="stylesheet" href="{% static 'direct/direct_index.css' %}">
+{% endblock css %}
+
+
+{% block content %}
+    
+    <div class="direct-wrapper">
+        <div class="direct-profiles">
+            <div class="direct-profiles-title">
+                <h1 class="current-user">{{ request.user.username }}</h1>
+            </div>
+            <div class="direct-profiles-friends">
+                {% for profile in mutuals %}
+                    <a href="{% url 'direct-chat' profile.pk %}">
+                        <div class="direct-profile">
+                            <img class="direct-profile-pfp" src="{{ profile.pfp.url }}" alt="pfp">
+                            <h1 class="direct-profile-usernme">{{ profile.user.username }}</h1>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>    
+        </div>
+
+        <div class="direct-chat">
+            <img class="direct-chat-welcome-img" src="{% static 'blog/logos/logo-direct-message.png' %}" alt="">
+            <h1 class="direct-chat-welcome-title">Direct</h1>
+            <p class="direct-chat-welcome-p">Here you can message your mutuals</p>
+        </div>
+    </div>
+
+{% endblock content %}

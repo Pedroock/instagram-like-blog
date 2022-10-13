@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'blog',
     'users',
     'ajax',
+    'direct',
     'django_cleanup.apps.CleanupConfig',
 ]
 
