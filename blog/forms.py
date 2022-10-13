@@ -3,8 +3,7 @@ from django import forms
 from .models import BlogPosts, BlogPostsLikes, BlogPostsComments
 
 class BlogCreatePost(forms.ModelForm):
-    desc = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Insert a description'}))
-
+    desc = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Insert a description', 'rows': 8}))
     class Meta:
         model = BlogPosts
         fields = ['profile', 'image', 'desc']

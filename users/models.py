@@ -6,7 +6,7 @@ from django_resized import ResizedImageField
 
 class UsersProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    pfp = ResizedImageField(size=[150, 150], upload_to='profile_pics', default='default_pfp.png')
+    pfp = ResizedImageField(size=[1920, 1080], upload_to='profile_pics', default='default_pfp.png')
     name = models.CharField(max_length=25)
     bio = models.CharField(max_length=255)
     

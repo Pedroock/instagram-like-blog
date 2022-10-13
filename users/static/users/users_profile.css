@@ -11,8 +11,9 @@
 }
 .users-profile-header-pfp{
     width: 150px;
+    height: 150px;
     border-radius: 50%;
-    object-fit: contain;
+    object-fit: cover;
 } 
 .users-profile-header-info{
     margin-left: 110px;

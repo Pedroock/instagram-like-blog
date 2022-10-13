@@ -17,10 +17,12 @@
     height: 450px;
     background-color: white;
     border-radius: 10px;
-    border: 1px solid #dbdbdb;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.home-create-form ul, .home-create-form label{
+    display: none;
 }
 .home-create-form-title{
     font-size: 24px;
@@ -68,6 +70,8 @@
     font-weight: bold;
     font-size: 14px;
     margin-top: 20px;
+}.home-create-form-submit:hover{
+    cursor: pointer;
 }
 .home-create-close-button{
     position: fixed;

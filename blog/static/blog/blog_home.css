@@ -24,7 +24,7 @@
     height: 32px;
     width: 32px;
     border-radius: 50%;
-    object-fit: contain;
+    object-fit: cover;
     margin-right: 10px;
 }
 .blog-post-top-username{
@@ -169,7 +169,7 @@ Post-like-popup
 .blog-post-like-popup-pfp{
     height: 44px;
     width: 44px;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 50%;
 }
 .blog-post-like-popup-username{

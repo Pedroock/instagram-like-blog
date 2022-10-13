@@ -10,9 +10,12 @@ from .methods import sort_follower_suggestions, sort_home_posts, detail_post, di
 def blog_home(request):
     if request.method == 'POST':
         if 'post-post' in request.POST:
+            print('post-post')
             form = BlogCreatePost(request.POST, request.FILES)
             if form.is_valid():
+                print('form is valid')
                 form.save()
+                print('saved')
                 return redirect('home')
             else:
                 form = BlogCreatePost({'profile': request.user.profile})

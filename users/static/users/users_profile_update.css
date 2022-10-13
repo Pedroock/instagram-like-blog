@@ -20,7 +20,7 @@ body{
     height: 38px;
     width: 38px;
     border-radius: 50%;
-    object-fit: contain;
+    object-fit: cover;
     margin-right: 25px;
 }
 .users-profile-update-name{

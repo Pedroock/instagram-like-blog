@@ -36,7 +36,7 @@
 .users-profile-follower-pfp, .users-profile-followed-pfp{
     height: 44px;
     width: 44px;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 50%;
 }
 .users-profile-follower-username, .users-profile-followed-username{

@@ -211,14 +211,19 @@
         <div class="home-create-form">
             <h1 class="home-create-form-title">Create a post</h1>
             <img class="home-create-form-image" src="{% static 'blog/logos/logo-upload2.png' %}" alt="upload">
-            <h1 class="home-create-form-button-fake">Select an image</h1>
-            {{ form.image }}
-            {{ form.desc }}
-            <button class="home-create-form-submit" name="post-post">Post</button>
+            <form method="post" enctype="multipart/form-data" class="home-create-form">
+                {% csrf_token %}
+                <h1 class="home-create-form-button-fake">Select an image</h1>
+                {{ form }}
+                <button class="home-create-form-submit" name="post-post" type="submit">Post</button>
+        </form>
         </div>
         <p class="home-create-close-button">+</p>
     </div>
     <script>
+        $('.home-create-form-submit').on('click', function(){
+            console.log('click no criar post')
+        })
         const uploadButton = document.querySelector('.header-upload-button')
         uploadButton.addEventListener('click', function(e){
             e.preventDefault() 
@@ -307,6 +312,7 @@
                             funcUnlike(unlikeForm)
                         })
                         likePopupAdd(wrapperAjaxDOM)
+                        funcComment(wrapperAjaxDOM.find('.post-bottom-comment-form'))
                     })
                 },
                 error: function(response){
@@ -337,6 +343,7 @@
                             funcLike(likeForm)
                         })
                         likePopupAdd(wrapperAjaxDOM)
+                        funcComment(wrapperAjaxDOM.find('.post-bottom-comment-form'))
                     })
                 },
                 error: function(response){
@@ -406,6 +413,7 @@
                                 funcLike(likeForm)
                             })
                             likePopupAdd(wrapperAjaxDOM)
+                            funcComment(wrapperAjaxDOM.find('.post-bottom-comment-form'))
                         })
                     },
                     error: function(response){

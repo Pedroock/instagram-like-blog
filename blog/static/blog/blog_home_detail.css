@@ -20,9 +20,9 @@
 }
 .blog-detail{
     background-color: #ffffff;
-    border: 1px solid #dbdbdb;
     border-radius: 5px;
     width: fit-content;
+    height: 550px;
     margin-bottom: 15px;
     font-family: sans-serif;
     display: flex;
@@ -59,7 +59,7 @@
     height: 32px;
     width: 32px;
     border-radius: 50%;
-    object-fit: contain;
+    object-fit: cover;
     margin-right: 10px;
 }
 .blog-detail-top-username{
@@ -92,7 +92,7 @@
 .blog-detail-comment{
     height: 20px;
     width: 20px;
-    object-fit: contain;
+    object-fit: cover;
     margin-left: 10px;
 }
 .blog-detail-comment:hover, .blog-detail-like-img:hover, .blog-detail-unlike-img:hover{
@@ -206,7 +206,7 @@
 .blog-detail-like-popup-pfp{
     height: 44px;
     width: 44px;
-    object-fit: contain;
+    object-fit: cover;
     border-radius: 50%;
 }
 .blog-detail-like-popup-username{
