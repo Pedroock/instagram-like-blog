@@ -17,7 +17,7 @@ body{
 }
 .direct-chat-title{
     height: 60px;
-    width: inherit;
+    max-width: 500px;
     border-bottom: 1px solid #dbdbdb;
     display: flex;
     align-items: center;
@@ -37,9 +37,41 @@ body{
 }
 
 .direct-chat-messages{
-    background-color: red;
-    height: 390px;
     width: inherit;
+    display: flex;
+    flex-direction: column-reverse;
+    height: 390px;
+    overflow-y: scroll;
+}
+.recieved-wrapper{
+    display: flex;
+    justify-content: left;
+    margin-left: 15px;
+    margin-bottom: 5px;
+}
+.recieved{
+    border: 1px solid #dbdbdb;
+    width: fit-content;
+    max-width: 250px;
+    border-radius: 15px;
+    font-size: 14px;
+    padding: 10px;
+    word-wrap: break-word;
+}
+.sent-wrapper{
+    display: flex;
+    justify-content: right;
+    margin-right: 15px;
+    margin-bottom: 5px;
+}
+.sent{
+    background-color: #efefef;
+    width: fit-content;
+    max-width: 250px;
+    border-radius: 15px;
+    font-size: 14px;
+    padding: 10px;
+    word-wrap: break-word;
 }
 
 .direct-chat-input{
@@ -97,3 +129,5 @@ body{
     font-size: 14px;
     font-weight: bold;
 }
+
+

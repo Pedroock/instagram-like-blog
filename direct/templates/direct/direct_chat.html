@@ -21,19 +21,19 @@
                 <h1 class="current-user">{{ request.user.username }}</h1>
             </div>
             <div class="direct-profiles-friends">
-                {% for profile in mutuals %}
+                {% for dict in mutuals %}
                     {% if profile == reciever %}
-                        <a href="{% url 'direct-chat' profile.pk %}">
+                        <a href="{% url 'direct-chat' dict.id %}">
                             <div class="direct-profile highlight"> <!-- add highlight class -->
-                                <img class="direct-profile-pfp" src="{{ profile.pfp.url }}" alt="pfp">
-                                <h1 class="direct-profile-usernme">{{ profile.user.username }}</h1>
+                                <img class="direct-profile-pfp" src="{{ dict.profile.pfp.url }}" alt="pfp">
+                                <h1 class="direct-profile-usernme">{{ dict.profile.user.username }}</h1>
                             </div>
                         </a>
                     {% else %}
-                        <a href="{% url 'direct-chat' profile.pk %}">
+                        <a href="{% url 'direct-chat' dict.id %}">
                             <div class="direct-profile">
-                                <img class="direct-profile-pfp" src="{{ profile.pfp.url }}" alt="pfp">
-                                <h1 class="direct-profile-usernme">{{ profile.user.username }}</h1>
+                                <img class="direct-profile-pfp" src="{{ dict.profile.pfp.url }}" alt="pfp">
+                                <h1 class="direct-profile-usernme">{{ dict.profile.user.username }}</h1>
                             </div>
                         </a>
                     {% endif %}
@@ -56,5 +56,70 @@
         </div>
     
     </div>
+    {{ room_name|json_script:"room-name" }}
+    {{ request.user.username|json_script:"user" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+        const username = JSON.parse(document.getElementById('user').textContent);
 
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/direct/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            if(data.sender == username){
+                let messageDivWrapper = document.createElement('div')
+                messageDivWrapper.classList.add('sent-wrapper')
+                let messageDiv = document.createElement('div')
+                messageDiv.classList.add('sent')
+                let messageDivNode = document.createTextNode(data.message)
+                messageDiv.appendChild(messageDivNode)
+                messageDivWrapper.appendChild(messageDiv)
+                document.querySelector('.direct-chat-messages').insertBefore(
+                    messageDivWrapper,
+                    document.querySelector('.direct-chat-messages').firstChild
+                    );              
+            }else{
+                let messageDivWrapper = document.createElement('div')
+                messageDivWrapper.classList.add('recieved-wrapper')
+                let messageDiv = document.createElement('div')
+                messageDiv.classList.add('recieved')
+                let messageDivNode = document.createTextNode(data.message)
+                messageDiv.appendChild(messageDivNode)
+                messageDivWrapper.appendChild(messageDiv)
+                document.querySelector('.direct-chat-messages').insertBefore(
+                    messageDivWrapper,
+                    document.querySelector('.direct-chat-messages').firstChild
+                    );              
+            }
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('.chat-message-input').focus();
+        document.querySelector('.chat-message-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('.chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('.chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('.chat-message-input');
+            const message = messageInputDom.value;
+            if(message != ''){
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'sender': username
+                }));
+                messageInputDom.value = '';
+            }
+        };
+    </script>
 {% endblock content %}

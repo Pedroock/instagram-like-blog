@@ -53,6 +53,7 @@ body{
     justify-content: space-between;
     align-items: center;
     width: 320px;
+    margin-bottom: 10px;
 }
 .blog-homeside-suggestions-profile-pfp{
     height: 32px;
