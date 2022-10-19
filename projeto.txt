@@ -322,6 +322,30 @@ esse window.history.back() é muito interessante, ele te joga uma página para t
 Esse eu também achei muito foda, tem os eventos de window, eu lembrava do window.onload por ex, q é quando você abre uma página nova, tentei usar isso mas cai em loop infinito, esse onpageshow ele indica não só quando a página é loaded, mas também quando você volta para ela da memória. Esse persisted pelo que entendi é indicando exatamente para se a página vem da memória, então a minha popupfake agora também da refresh na home sem perder o scroll e assim as ações de ambas estão interligadas, eu posso dar um like na home e dislike na fakepopup e vice versa. Funcionando perfeito até agora.
 
 
+DIA 13- To fazendo o direct, fiz a parte do front-end q se relaciona entre si e dei uma boa lida nas docs do channels.
+
+
+DIA 14- Hoje eu dei uma pesquisada nas sessions do django, pq parece q posso usar no caso para obter dados de outra views. Vi explicações sobre session, cookies e tokens pelo q entend session guarda info do usar e pode ser acessada com cookie, token libera o acesso a third-party e pode ser usado entre duas entidades que não se confiam. 
+Eu acabei q vou usar PAIRING FUNCTIONS para tirar o id do chat, tem o >>> pip install pairing    que é um modulo q tem as funções de pair e depair, que eu vou usar.
+BEM ACABEI, porra foram 6 raladas horas, mas ta pronto o chat, foi até q bem direto ao ponto, segue o tutorial dos DOCS do django channels e depois manda bala no resto, que foi só adicionar as mensagens pra database, eu fiz no handler da mensagem msm e só usei um if para checar se o sender é o user, se não o a mensagem fica salva duas vezes. ta funcionando legal. Vou deixar aqui a async def da consumer q lida com as mensagens enviadas
+>>> async def chat_message(self, event):
+        message = event["message"]
+        sender = event['sender']
+        # Create model instance of the message
+        print(f'esse foi o user do scope {self.scope["user"]}')
+        print(f'esse foi o sender {sender}')
+        if sender == self.scope["user"].username:
+            msg = DirectChatMessage(
+                chat_id=self.room_name, 
+                sender= await sync_to_async(User.objects.filter(username=sender).first)(),
+                message=message
+            )
+            await sync_to_async(msg.save)()
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({"message": message, 'sender': sender}))
+De resto foi só o básico que eu já expliquei aqui várias vezes, agora amanhã vou testar mais as mensagens e vou mandar bala pra fazer as notificações e quem sabe a searchbar.
+
+ 
 
 
 

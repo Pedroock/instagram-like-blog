@@ -1,6 +1,8 @@
 import json
-
+from .models import DirectChatMessage
+from django.contrib.auth.models import User
 from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import sync_to_async
 
 
 class DirectConsumer(AsyncWebsocketConsumer):
@@ -32,5 +34,15 @@ class DirectConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         message = event["message"]
         sender = event['sender']
+        # Create model instance of the message
+        print(f'esse foi o user do scope {self.scope["user"]}')
+        print(f'esse foi o sender {sender}')
+        if sender == self.scope["user"].username:
+            msg = DirectChatMessage(
+                chat_id=self.room_name, 
+                sender= await sync_to_async(User.objects.filter(username=sender).first)(),
+                message=message
+            )
+            await sync_to_async(msg.save)()
         # Send message to WebSocket
         await self.send(text_data=json.dumps({"message": message, 'sender': sender}))

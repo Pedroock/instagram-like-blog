@@ -1,5 +1,6 @@
 body{
     background-color: #fafafa;
+    font-family: sans-serif;
 }
 /*
 Header
@@ -25,11 +26,80 @@ Header
     object-fit: contain;
 }
 .blog-header-searchbar{
+    box-sizing: border-box;
+    padding: 15px;
+    font-size: 14px;
     background-color: #efefef;
     width: 270px;
     height: 40px;
     border-radius: 10px;
+    outline: none;
+    border: none;
+    z-index: 10;
+}.blog-header-searchbar:focus{
+    outline: none;
+    border: none;
 }
+.blog-header-search-popup{
+    position: fixed;
+    width: 400px;
+    height: 250px;
+    background-color: #fafafa;
+    border: 1px solid #dbdbdb;
+    border-radius: 5px;
+    top: 65px;
+    left: 28vw;
+    display: none;
+}
+.blog-header-search-popup-top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0px 20px 0px;
+}
+.blog-header-search-popup-top-title{
+    font-weight: bold;
+    color: #262626;
+}
+.blog-header-search-popup-top-close{
+    font-size: 35px;
+    color: #0095f6;
+    transform: rotate(45deg);
+}.blog-header-search-popup-top-close{
+    cursor: pointer;
+}
+
+.blog-header-search-popup-profiles{
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    padding: 15px 20px 10px;
+    margin-bottom: 15px;
+    overflow-y: scroll;
+    height: 210px;
+}
+.blog-header-search-popup-profile{
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-radius: 10px;
+}.blog-header-search-popup-profile:hover{
+    cursor: pointer;
+    background-color: rgb(0, 0, 0, 0.1);
+}
+.blog-header-search-popup-profile-pfp{
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+.blog-header-search-popup-profile-username{
+    color: #262626;
+    font-weight: bold;
+}
+
 .blog-header-buttons{
     display: flex;
 }

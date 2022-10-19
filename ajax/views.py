@@ -5,7 +5,7 @@ from users.forms import UsersFollowersForm
 from django.http import JsonResponse
 from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
-from users.models import UsersFollowers
+from users.models import UsersFollowers, UsersProfile
 # Create your views here.
 @csrf_exempt
 def AjaxProfileFollow(request):
@@ -98,3 +98,16 @@ def AjaxPostComment(request):
             JsonResponse({'status': 'error'}, status=400)
     else:
         return JsonResponse({'status': 'error'}, status=400)
+
+
+def ProfilesQuery(request):
+    query = []
+    profiles = UsersProfile.objects.all()
+    for profile in profiles:
+        dict = {
+            'username': profile.user.username,
+            'pfp_url': profile.pfp.url,
+            'pk': profile.pk
+        }
+        query.append(dict)
+    return JsonResponse(query, safe=False)

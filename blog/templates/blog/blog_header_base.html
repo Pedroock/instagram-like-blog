@@ -19,9 +19,20 @@
                 <img class="blog-header-main-logo" src="{% static 'blog/logos/ig-text-logo.png' %}" alt="logo">
             </a>
         </div>
-        <div class="blog-header-searchbar">
-            <div class="placeholder">placeholder</div>
+        <input type="text" class="blog-header-searchbar" placeholder="Search for profiles">
+        <div class="blog-header-search-popup">
+            <div class="blog-header-search-popup-top">
+                <h1 class="blog-header-search-popup-top-title">Results</h1>
+                <h1 class="blog-header-search-popup-top-close">+</h1>
+            </div>
+            <div class="blog-header-search-popup-profiles">
+                <div class="blog-header-search-popup-profile">
+                    <img class="blog-header-search-popup-profile-pfp" src="{{ request.user.profile.pfp.url }}">
+                    <h1 class="blog-header-search-popup-profile-username">{{ request.user.username }}</h1>
+                </div>
+            </div>
         </div>
+
         <div class="blog-header-buttons">
             <a href="{% url 'home' %}">
                 <img class="blog-header-logo" src="{% static 'blog/logos/logo-home.png' %}" alt="home">
@@ -48,7 +59,50 @@
             </a>
         </div>
     </header>
-
+    
+    <script>
+        $('.blog-header-search-popup-top-close').on('click', function(){
+            $('.blog-header-search-popup').css('display', 'none')
+            $('.blog-header-searchbar').val('')
+        })
+        $.getJSON('{% url "profile-query" %}', function(data){
+            $('.blog-header-searchbar').keyup(function(){
+                var elegibleProfiles = []
+                let inputVal = $('.blog-header-searchbar').val()
+                // close popup if input == ''
+                if(inputVal == ''){
+                    $('.blog-header-search-popup').css('display', 'none')
+                }else{
+                    $('.blog-header-search-popup').css('display', 'block')
+                }
+                // check val is in usernames
+                for(let i = 0; i < data.length; i++){
+                    if(data[i].username.includes(inputVal)){
+                        elegibleProfiles.push(data[i])
+                    }
+                }
+                // add elegible profiles to the popup
+                $('.blog-header-search-popup-profiles').empty()
+                for(let i = 0; i < elegibleProfiles.length; i++){
+                    pk = elegibleProfiles[i].pk
+                    let link = document.createElement('a')
+                    link.href = window.location.origin + '/users/profile/' + pk
+                    let profileWrapper = document.createElement('div')
+                    profileWrapper.classList = "blog-header-search-popup-profile"
+                    let pfp = document.createElement('img')
+                    pfp.classList = 'blog-header-search-popup-profile-pfp'
+                    pfp.src = elegibleProfiles[i].pfp_url
+                    let username = document.createElement('h1')
+                    username.classList = 'blog-header-search-popup-profile-username'
+                    username.innerHTML = elegibleProfiles[i].username
+                    profileWrapper.appendChild(pfp)
+                    profileWrapper.appendChild(username)
+                    link.appendChild(profileWrapper)
+                    $('.blog-header-search-popup-profiles').append(link)
+                }
+            })
+        })
+    </script>
     
     {% block content %}
     {% endblock content %}

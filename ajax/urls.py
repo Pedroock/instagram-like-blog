@@ -7,4 +7,5 @@ urlpatterns = [
     path('post/follow', views.AjaxPostLike, name='post-like'),
     path('post/unfollow', views.AjaxPostUnlike, name='post-unlike'),
     path('post/comment', views.AjaxPostComment, name='post-comment'),
+    path('profile/query', views.ProfilesQuery, name='profile-query'),
 ]
