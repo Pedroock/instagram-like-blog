@@ -14,5 +14,5 @@ def sort_profile_posts(profile):
             'comment_obj': BlogPostsComments.objects.filter(post=post),
             'like_obj': BlogPostsLikes.objects.filter(post=post)
         }
-        profile_posts.append(post_dict)
+        profile_posts.insert(0, post_dict)
     return profile_posts

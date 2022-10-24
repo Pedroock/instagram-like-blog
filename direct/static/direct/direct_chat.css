@@ -75,12 +75,42 @@ body{
 }
 
 .direct-chat-input{
-    background-color: green;
     height: 60px;
     width: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
-
-
+.input-wrapper{
+    display: flex;
+    width: 450px;
+    height: 30px;
+    border: 1px solid #dbdbdb;
+    border-radius: 20px;
+    justify-content: space-between;
+}
+.chat-message-input{
+    border-radius: 20px;
+    font-size: 14px;
+    padding: 8px 10px 8px;
+    border: none;
+    outline: none;
+    width: 400px;
+}.chat-message-input:focus{
+    outline: none;
+    border: none;
+}
+.chat-message-submit{
+    outline: none;
+    border: none;
+    background-color: #ffffff;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #0095f6;
+    margin-right: 10px;
+}.chat-message-submit:hover{
+    cursor: pointer;
+}
 
 
 .direct-profiles{
@@ -111,7 +141,7 @@ body{
     width: inherit;
 }
 .highlight{
-    background-color: rgb(0, 0, 0, 0.04);
+    background-color: rgb(0, 0, 0, 0.05);
 }
 .direct-profile:hover{
     background-color: rgb(0, 0, 0, 0.05);

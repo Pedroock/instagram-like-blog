@@ -22,7 +22,7 @@
             </div>
             <div class="direct-profiles-friends">
                 {% for dict in mutuals %}
-                    {% if profile == reciever %}
+                    {% if dict.profile == reciever %}
                         <a href="{% url 'direct-chat' dict.id %}">
                             <div class="direct-profile highlight"> <!-- add highlight class -->
                                 <img class="direct-profile-pfp" src="{{ dict.profile.pfp.url }}" alt="pfp">
@@ -42,10 +42,12 @@
         </div>
 
         <div class="direct-chat">
-            <div class="direct-chat-title">
-                <img class="direct-chat-title-pfp" src="{{ reciever.pfp.url }}" alt="">
-                <h1 class="direct-chat-title-username">{{ reciever.user.username }}</h1>
-            </div>
+            <a href="{% url 'profile' reciever.pk %}">
+                <div class="direct-chat-title">
+                    <img class="direct-chat-title-pfp" src="{{ reciever.pfp.url }}" alt="">
+                    <h1 class="direct-chat-title-username">{{ reciever.user.username }}</h1>
+                </div>
+                </a>
             <div class="direct-chat-messages">
                 {% for message in messages %}
                     {% if message.sender == request.user %}
@@ -60,8 +62,10 @@
                 {% endfor %}
             </div>
             <div class="direct-chat-input">
-                <input class="chat-message-input" type="text">
-                <input class="chat-message-submit" type="button">
+                <div class="input-wrapper">
+                    <input class="chat-message-input" type="text">
+                    <input class="chat-message-submit" type="button" value="Send">
+                </div>
             </div>
         </div>
     

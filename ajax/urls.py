@@ -8,4 +8,5 @@ urlpatterns = [
     path('post/unfollow', views.AjaxPostUnlike, name='post-unlike'),
     path('post/comment', views.AjaxPostComment, name='post-comment'),
     path('profile/query', views.ProfilesQuery, name='profile-query'),
+    path('notification/<int:pk>', views.NotificationQuery, name='notification-query'),
 ]

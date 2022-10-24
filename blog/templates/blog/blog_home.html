@@ -221,19 +221,24 @@
         <p class="home-create-close-button">+</p>
     </div>
     <script>
-        $('.home-create-form-submit').on('click', function(){
-            console.log('click no criar post')
-        })
         const uploadButton = document.querySelector('.header-upload-button')
         uploadButton.addEventListener('click', function(e){
             e.preventDefault() 
             let popUpBackground = document.querySelector('.home-create-form-background')
             popUpBackground.style.display = 'flex'
+            $('.header-upload-button').css('display', 'none')
+            $('.upload-fill').css('display', 'flex')
+            $('.home-unfill').css('display', 'flex')
+            $('.home-fill').css('display', 'none')
         })
         const uploadCloseButton = document.querySelector('.home-create-close-button')
         uploadCloseButton.addEventListener('click', function(){
             let popUpBackground = document.querySelector('.home-create-form-background')
             popUpBackground.style.display = 'none'
+            $('.header-upload-button').css('display', 'flex')
+            $('.upload-fill').css('display', 'none')
+            $('.home-unfill').css('display', 'none')
+            $('.home-fill').css('display', 'flex')
         })
     </script>
 {% endblock form %}

@@ -37,4 +37,8 @@ def blog_post_detail(request, pk):
 
 @login_required
 def blog_discover(request):
-    return render(request, 'blog/blog_discover.html', {'discover_posts': discover_posts(request)})
+    context = {
+        'discover_posts': discover_posts(request),
+        'discover': True
+    }
+    return render(request, 'blog/blog_discover.html', context)

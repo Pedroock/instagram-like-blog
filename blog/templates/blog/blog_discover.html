@@ -17,20 +17,24 @@
 {% block content %}
     
     <div class="discover-wrapper">
-        {% for post_dict in discover_posts %}
-            <a href="{% url 'post-detail' post_dict.post_obj.pk %}">
-                <img class="discover-image" src="{{ post_dict.post_obj.image.url }}" alt="post">
-                <div class="discover-hover">
-                    <div class="hover-content">
-                        <p class="discover-text">{{ post_dict.like_obj|length }}</p> 
-                        <img class="discover-logo" src="{% static 'blog/logos/logo-img-like-solid.png' %}" alt="">
-                        <span class="space"> </span>
-                        <p class="discover-text">{{ post_dict.comment_obj|length }}</p>
-                        <img class="discover-logo" src="{% static 'blog/logos/logo-coment-solid.png' %}" alt="">
+        {% if discover_posts %}
+            {% for post_dict in discover_posts %}
+                <a href="{% url 'post-detail' post_dict.post_obj.pk %}">
+                    <img class="discover-image" src="{{ post_dict.post_obj.image.url }}" alt="post">
+                    <div class="discover-hover">
+                        <div class="hover-content">
+                            <p class="discover-text">{{ post_dict.like_obj|length }}</p> 
+                            <img class="discover-logo" src="{% static 'blog/logos/logo-img-like-solid.png' %}" alt="">
+                            <span class="space"> </span>
+                            <p class="discover-text">{{ post_dict.comment_obj|length }}</p>
+                            <img class="discover-logo" src="{% static 'blog/logos/logo-coment-solid.png' %}" alt="">
+                        </div>
                     </div>
-                </div>
-            </a>
-        {% endfor %}
+                </a>
+            {% endfor %}
+        {% else %}
+                <h1 class="nothing-to">It seems you have nothing to discover... :(</h1>
+        {% endif %}
     </div>
 
 {% endblock content %}

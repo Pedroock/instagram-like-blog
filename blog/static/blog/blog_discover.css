@@ -48,3 +48,12 @@
 .space{
     width: 20px;
 }
+.nothing-to{
+    color: #8e8e8e;
+    width: 40vw;
+    text-align: center;
+    position: fixed;
+    left: 30vw;
+    bottom: 50%;
+    font-size: 20px;
+}

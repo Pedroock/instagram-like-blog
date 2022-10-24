@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from ajax.models import AjaxNotification
 from blog.forms import BlogPostsLikesForm, BlogPostsCommentsForm
 from blog.models import BlogPostsLikes, BlogPostsComments
 from users.forms import UsersFollowersForm
@@ -108,6 +109,25 @@ def ProfilesQuery(request):
             'username': profile.user.username,
             'pfp_url': profile.pfp.url,
             'pk': profile.pk
+        }
+        query.append(dict)
+    return JsonResponse(query, safe=False)
+
+
+def NotificationQuery(request, pk):
+    receiver = UsersProfile.objects.filter(pk=pk).first()
+    notifications = AjaxNotification.objects.filter(receiver=receiver)
+    query = []
+    for obj in notifications:
+        post_pk = None
+        if obj.post is not None:
+            post_pk = obj.post.pk
+        dict = {
+            'username': obj.notifier.user.username,
+            'pfp_url': obj.notifier.pfp.url,
+            'pk': obj.notifier.pk,
+            'action': obj.action,
+            'post_pk': post_pk
         }
         query.append(dict)
     return JsonResponse(query, safe=False)

@@ -10,7 +10,8 @@ from .models import DirectChatMessage
 @login_required
 def direct_index(request):
     context = {
-        'mutuals': mutuals(request)
+        'mutuals': mutuals(request),
+        'direct': True
     }
     return render(request, 'direct/direct_index.html', context)
 
@@ -35,6 +36,7 @@ def direct_chat(request, id):
         'mutuals': mutuals(request),
         'reciever': reciever,
         'room_name': id,
-        'messages': messages
+        'messages': messages,
+        'direct': True
     }
     return render(request, 'direct/direct_chat.html', context)
