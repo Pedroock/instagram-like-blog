@@ -16,7 +16,8 @@ def like_post(sender, instance, created, **kwargs):
         notification = AjaxNotification(
             notifier=notifier, action=action, post=post, receiver=receiver, like_obj=instance
         )
-        notification.save()
+        if notifier != receiver:
+            notification.save()
 
 
 @receiver(post_save, sender=BlogPostsComments)
@@ -29,7 +30,8 @@ def comment_post(sender, instance, created, **kwargs):
         notification = AjaxNotification(
             notifier=notifier, action=action, post=post, receiver=receiver, comment_obj=instance
         )
-        notification.save()
+        if notifier != receiver:
+            notification.save()
 
 @receiver(post_save, sender=UsersFollowers)
 def follow(sender, instance, created, **kwargs):
@@ -40,4 +42,5 @@ def follow(sender, instance, created, **kwargs):
         notification = AjaxNotification(
             notifier=notifier, action=action, receiver=receiver, follow_obj=instance
         )
-        notification.save()
+        if notifier != receiver:
+            notification.save()

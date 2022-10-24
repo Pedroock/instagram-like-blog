@@ -21,6 +21,10 @@
     <!-- Post template wrappers here there will be the post, the detail post and the post popups -->
     <div class="blog-posts-content-section">
         <div class="blog-posts-section">
+            {% if not post_utils_list %}
+                <p class="welcomer">We have nothing to show you right now...<br>
+                Try following some profiles</p>
+            {% endif %}
             {% for post_dict in post_utils_list %}
             <!--  {  'post_obj': post_obj, 'like_form': like_form, 'like_obj': like_obj, 'is_liked': True, 
                      'comment_form': comment_form, 'comment_obj': comment_obj, 'comment_first': comment_first,
