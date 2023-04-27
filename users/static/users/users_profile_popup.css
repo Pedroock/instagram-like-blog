@@ -17,6 +17,7 @@
     background-color: #ffffff;
     border: 1px solid #dbdbdb;
     border-radius: 10px;
+    overflow-y: scroll;
 }
 .users-profile-follower-popup-title, .users-profile-followed-popup-title{
     margin-top: 10px;
